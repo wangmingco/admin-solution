@@ -18,6 +18,13 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<shiro.version>1.5.1</shiro.version>
+		<mysql.connector.version>8.0.19</mysql.connector.version>
+		<mybatis.spring.boot.version>2.1.1</mybatis.spring.boot.version>
+		<druid.version>1.1.21</druid.version>
+		<fastjson.version>1.2.62</fastjson.version>
+		<jmockit.version>1.49</jmockit.version>
+		<junit.version>4.13</junit.version>
 	</properties>
 
 	<dependencies>
@@ -26,6 +33,58 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!-- 权限验证 -->
+		<!--		<dependency>-->
+		<!--			<groupId>org.apache.shiro</groupId>-->
+		<!--			<artifactId>shiro-spring-boot-starter</artifactId>-->
+		<!--			<version>${shiro.version}</version>-->
+		<!--		</dependency>-->
+
+		<!-- mysql 驱动 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.connector.version}</version>
+		</dependency>
+
+		<!-- orm框架依赖 -->
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>${mybatis.spring.boot.version}</version>
+		</dependency>
+
+		<!-- 数据源依赖 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>${druid.version}</version>
+		</dependency>
+
+		<!-- json依赖 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${fastjson.version}</version>
+		</dependency>
+
+		<!-- 测试mock框架 -->
+		<dependency>
+			<groupId>org.jmockit</groupId>
+			<artifactId>jmockit</artifactId>
+			<version>${jmockit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- 测试框架 -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- springboot测试框架 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -37,6 +96,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 	</dependencies>
 
 	<build>
