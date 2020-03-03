@@ -25,6 +25,7 @@
 		<fastjson.version>1.2.62</fastjson.version>
 		<jmockit.version>1.49</jmockit.version>
 		<junit.version>4.13</junit.version>
+		<apache.collections4.version>4.4</apache.collections4.version>
 	</properties>
 
 	<dependencies>
@@ -34,11 +35,11 @@
 		</dependency>
 
 		<!-- 权限验证 -->
-		<!--		<dependency>-->
-		<!--			<groupId>org.apache.shiro</groupId>-->
-		<!--			<artifactId>shiro-spring-boot-starter</artifactId>-->
-		<!--			<version>${shiro.version}</version>-->
-		<!--		</dependency>-->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring-boot-starter</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
 
 		<!-- mysql 驱动 -->
 		<dependency>
@@ -54,18 +55,17 @@
 			<version>${mybatis.spring.boot.version}</version>
 		</dependency>
 
-		<!-- 数据源依赖 -->
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid</artifactId>
-			<version>${druid.version}</version>
-		</dependency>
-
 		<!-- json依赖 -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>${fastjson.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>${apache.collections4.version}</version>
 		</dependency>
 
 		<!-- 测试mock框架 -->
@@ -105,6 +105,17 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version> <!-- or some other version -->
+				<configuration>
+					<argLine>
+						-javaagent:"${settings.localRepository}"/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
+					</argLine>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 

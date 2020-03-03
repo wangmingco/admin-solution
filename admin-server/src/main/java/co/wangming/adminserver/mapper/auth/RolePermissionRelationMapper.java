@@ -16,6 +16,10 @@ public interface RolePermissionRelationMapper {
     @Select("SELECT * FROM RolePermissionRelation")
     List<RolePermissionRelation> selectAllRolePermissionRelations();
 
+
+    @Select("SELECT * FROM RolePermissionRelation where roleId = #{roleId}")
+    List<RolePermissionRelation> selectRolePermissionRelationByRoleId(long roleId);
+
     @Insert("INSERT INTO RolePermissionRelation (roleId, permissionId, status) VALUES(#{roleId}, #{permissionId}, 1)")
     int insertOneRolePermissionRelation(RolePermissionRelation user);
 }
