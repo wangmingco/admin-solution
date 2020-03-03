@@ -33,7 +33,10 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
+      console.log('[store.login] 触发store 登录动作')
       login({ username: username.trim(), password: password }).then(response => {
+        console.log('[store.login] 登录操作执行完成 : ', response)
+
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)

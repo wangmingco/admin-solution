@@ -7,8 +7,13 @@ import { getToken } from '@/utils/auth'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
   withCredentials: true, // 跨域请求时发送 cookies
-  timeout: 5000 // request timeout
+  timeout: 60000 // request timeout
 })
+
+if (process.env.NODE_ENV === 'development') {
+  service.defaults.baseURL = 'http://localhost:9900/'
+  service.defaults.withCredentials = true
+}
 
 // request interceptor
 service.interceptors.request.use(
@@ -40,6 +45,7 @@ service.interceptors.response.use(
    * 以下代码均为样例，请结合自生需求加以修改，若不需要，则可删除
    */
   response => {
+    console.log('[request.js] 请求执行完成 ', response)
     const res = response.data
     if (res.code !== 20000) {
       Message({

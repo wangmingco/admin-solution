@@ -147,17 +147,20 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
+          console.log('[login.index] 用户名/密码符合要求, 开始进行登录')
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
+              console.log('[login.index] 登录请求完成', this.redirect)
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
             })
             .catch(() => {
+              console.log('[login.index] 首页转发失败')
               this.loading = false
             })
         } else {
-          console.log('error submit!!')
+          console.log('用户名/密码不符合要求')
           return false
         }
       })
