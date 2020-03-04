@@ -1,7 +1,10 @@
 package co.wangming.adminserver.shiro;
 
+import co.wangming.adminserver.enums.ResponseCode;
 import co.wangming.adminserver.logger.LoggerFactory;
 import co.wangming.adminserver.logger.LoggerLocalCache;
+import co.wangming.adminserver.vo.Response;
+import com.alibaba.fastjson.JSON;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -24,34 +27,40 @@ public class ApiAccessControlFilter extends AccessControlFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
+        LOGGER.info("开始进行鉴权");
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String uri = httpServletRequest.getRequestURI();
+
         String requestToken = httpServletRequest.getHeader("X-Token");
-
-        Subject subject = SecurityUtils.getSubject();
-        trySetLogger(subject, uri);
-
-        Object sessionToken = subject.getSession().getAttribute("X-Token");
-        if (StringUtils.isEmpty(requestToken) || StringUtils.isEmpty(sessionToken) || !(requestToken.equals(sessionToken))) {
-            LOGGER.info("token验证失败  requestToken:{}, sessionToken:{}", requestToken, sessionToken);
+        if (StringUtils.isEmpty(requestToken)) {
+            LOGGER.warn("token验证失败  requestToken为空:{}", requestToken);
             return false;
         }
 
-        LOGGER.info("开始进行鉴权");
+        Subject subject = SecurityUtils.getSubject();
+        trySetLogger(subject);
+
+        Object sessionToken = subject.getSession().getAttribute("X-Token");
+        if (StringUtils.isEmpty(sessionToken)) {
+            LOGGER.warn("token验证失败 sessionToken为空:{}", sessionToken);
+            return false;
+        }
+
+        if (!(requestToken.equals(sessionToken))) {
+            LOGGER.warn("token验证失败requestToken与sessionToken不相等. requestToken:{}, sessionToken:{}", requestToken, sessionToken);
+            return false;
+        }
 
         boolean isAuthenticated = subject.isAuthenticated();
-        boolean isPermitted = subject.isPermitted(uri);
+        boolean isPermitted = subject.isPermitted(httpServletRequest.getRequestURI());
 
         LOGGER.info("鉴权完成 isPermitted:{}, isAuthenticated:{}", isPermitted, isAuthenticated);
 
         return isPermitted && isAuthenticated;
     }
 
-    private void trySetLogger(Subject subject, String uri) {
+    private void trySetLogger(Subject subject) {
         try {
-            LoggerLocalCache.INSTANCE.setPath(uri);
-
             Session session = subject.getSession();
             Object user = session.getAttribute(PRINCIPALS_SESSION_KEY);
             LoggerLocalCache.INSTANCE.setUser(user == null ? null : user.toString());
@@ -62,7 +71,13 @@ public class ApiAccessControlFilter extends AccessControlFilter {
     }
 
     @Override
-    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse servletResponse) throws Exception {
+        LOGGER.info("访问被拒绝");
+        Response response = ResponseCode.AUTH_FAIL.build();
+
+        String result = JSON.toJSONString(response);
+        servletResponse.getOutputStream().write(result.getBytes());
+        servletResponse.flushBuffer();
 
         return true;
     }

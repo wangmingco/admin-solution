@@ -32,7 +32,7 @@ public class UserAuthController {
     }
 
     @GetMapping("info")
-    public Response login(@RequestParam("token") String token) {
+    public Response login() {
 
         return userAuthService.info();
     }

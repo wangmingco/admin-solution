@@ -41,14 +41,16 @@ public class DatabaseRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        LOGGER.info("认证开始");
+
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         String username = token.getUsername();
         User user = userMapper.selectOneUserByName(username);
         if (user == null) {
-            LOGGER.warn("找不到用户");
+            LOGGER.warn("认证结束 找不到用户");
             return null;
         }
-        LOGGER.info("发现用户");
+        LOGGER.info("认证结束 发现用户");
         return new SimpleAuthenticationInfo(username, user.getPassword(), getName());
     }
 
@@ -59,12 +61,15 @@ public class DatabaseRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        LOGGER.info("授权开始");
+
         String username = (String) super.getAvailablePrincipal(principalCollection);
 
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 
         User user = userMapper.selectOneUserByName(username);
         if (user == null) {
+            LOGGER.info("授权结束, 找不到用户");
             return authorizationInfo;
         }
 
@@ -83,6 +88,7 @@ public class DatabaseRealm extends AuthorizingRealm {
             }
         }
 
+        LOGGER.info("授权完成");
         return authorizationInfo;
     }
 
