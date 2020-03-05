@@ -60,7 +60,7 @@ public class RequestCostTimeInterceptor extends HandlerInterceptorAdapter {
 
             threadLocal.set(costTimeData);
 
-            LOGGER.info("[调用计时器] 设置costTimeData完成:{}", JSON.toJSONString(costTimeData));
+            LOGGER.debug("[调用计时器] 设置costTimeData完成:{}", JSON.toJSONString(costTimeData));
         } catch (Exception e) {
             LOGGER.error("[调用计时器] 设置costTimeData异常:", e);
         }
@@ -77,10 +77,11 @@ public class RequestCostTimeInterceptor extends HandlerInterceptorAdapter {
             }
 
             long costTime = System.currentTimeMillis() - costTimeData.startTime;
-            LOGGER.info("[调用计时器]  handlerName:{}, costTime:{}(毫秒), traceId:{}, startTime:{}", costTimeData.handlerName, costTime, costTimeData.traceId, costTimeData.startTime);
 
             if (costTime > 1000) {
                 LOGGER.warn("[调用计时器] 耗时时间过长 traceId:{}, costTime:{}(毫秒), handlerName:{}, startTime:{}", costTimeData.traceId, costTime, costTimeData.handlerName, costTimeData.startTime);
+            } else {
+                LOGGER.info("[调用计时器]  handlerName:{}, costTime:{}(毫秒), traceId:{}, startTime:{}", costTimeData.handlerName, costTime, costTimeData.traceId, costTimeData.startTime);
             }
         } catch (Exception e) {
             LOGGER.error("[调用计时器] 记录耗时异常", e);

@@ -5,11 +5,31 @@
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
 
+
+###
 POST http://localhost:9900/api/user/auth/login
 Content-Type: application/json
 
 {
-  "username": "test"
+  "username": "admin",
+  "password": "111111"
 }
+
+###
+
+GET http://localhost:9900/api/user/auth/info
+X-Token: ade668d2d2f651d6917b66f90c97d2f
+
+###
+
+GET http://localhost:9900/api/user/auth/info
+X-Token: ade668d2d2f651d6917b66f90c97d2f
+admin-solution: d0eb349c-8599-4b94-8ec8-f0b692c0c768
+
+###
+
+GET http://localhost:9900/api/user/auth/info
+X-Token: ade668d2d2f651d6917b66f90c97d2f
+Set-Cookie: admin-solution=ece95405-d9d8-4bc0-a683-8e03932457eb
 
 ###
