@@ -1,6 +1,5 @@
 package co.wangming.adminserver.config;
 
-import co.wangming.adminserver.logger.LoggerLocalCache;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.WebRequestInterceptor;
