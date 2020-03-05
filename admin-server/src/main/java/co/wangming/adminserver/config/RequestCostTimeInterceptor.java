@@ -12,20 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Project Name: mercedesbenz
- * Package Name: com.finup.settlement.cloud.filter
- * Author:       liujie
- * Date:         2019-04-10 16:30
- * Description:  用来统一业务线请求方式，
- * 有的业务线使用 contextType:application/www-url-encoded
- * 有的业务线使用 contextType:application/json;
- * 该过滤器主要将上述两种请求方式统一
- * Revision history: 1、fanpu created at 2019-04-10
- */
+ *
+ * Created By WangMing On 2020-03-02
+ **/
 @Component
-public class LogHandlerInterceptor extends HandlerInterceptorAdapter {
+public class RequestCostTimeInterceptor extends HandlerInterceptorAdapter {
 
-    private static final Logger logger = LoggerFactory.getLogger(LogHandlerInterceptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestCostTimeInterceptor.class);
 
     private ThreadLocal<CostTimeData> threadLocal = new ThreadLocal<>();
 
@@ -46,9 +39,9 @@ public class LogHandlerInterceptor extends HandlerInterceptorAdapter {
 
         String handlerName = "";
         try {
-            handlerName = method.getBeanType().toGenericString() + "-" + method.getMethod().getName();
+            handlerName = method.getBeanType().getCanonicalName() + "#" + method.getMethod().getName() + "()";
         } catch (Exception e) {
-            logger.error("[统一解码器] 获取handler name异常", e);
+            LOGGER.error("[调用计时器] 获取handler name异常", e);
         }
 
         setCostTimeData(request, handlerName);
@@ -67,9 +60,9 @@ public class LogHandlerInterceptor extends HandlerInterceptorAdapter {
 
             threadLocal.set(costTimeData);
 
-            logger.info("[统一解码器-记录方法耗时] 设置costTimeData完成:{}", JSON.toJSONString(costTimeData));
+            LOGGER.info("[调用计时器] 设置costTimeData完成:{}", JSON.toJSONString(costTimeData));
         } catch (Exception e) {
-            logger.error("[统一解码器-记录方法耗时] 设置costTimeData异常:", e);
+            LOGGER.error("[调用计时器] 设置costTimeData异常:", e);
         }
     }
 
@@ -79,18 +72,18 @@ public class LogHandlerInterceptor extends HandlerInterceptorAdapter {
         try {
             CostTimeData costTimeData = threadLocal.get();
             if (costTimeData == null) {
-                logger.warn("[统一解码器-记录方法耗时] 记录失败, 找不到CostTimeData");
+                LOGGER.warn("[调用计时器] 记录失败, 找不到CostTimeData");
                 return;
             }
 
             long costTime = System.currentTimeMillis() - costTimeData.startTime;
-            logger.info("[统一解码器-记录方法耗时] 记录完成 traceId:{}, costTime:{}(毫秒), handlerName:{}, startTime:{}", costTimeData.traceId, costTime, costTimeData.handlerName, costTimeData.startTime);
+            LOGGER.info("[调用计时器]  handlerName:{}, costTime:{}(毫秒), traceId:{}, startTime:{}", costTimeData.handlerName, costTime, costTimeData.traceId, costTimeData.startTime);
 
             if (costTime > 1000) {
-                logger.warn("[统一解码器-记录方法耗时] 耗时时间过长 traceId:{}, costTime:{}(毫秒), handlerName:{}, startTime:{}", costTimeData.traceId, costTime, costTimeData.handlerName, costTimeData.startTime);
+                LOGGER.warn("[调用计时器] 耗时时间过长 traceId:{}, costTime:{}(毫秒), handlerName:{}, startTime:{}", costTimeData.traceId, costTime, costTimeData.handlerName, costTimeData.startTime);
             }
         } catch (Exception e) {
-            logger.error("[统一解码器-记录方法耗时] 记录耗时异常", e);
+            LOGGER.error("[调用计时器] 记录耗时异常", e);
         } finally {
             threadLocal.remove();
         }
