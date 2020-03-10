@@ -1,6 +1,8 @@
 package co.wangming.adminserver.config;
 
 import co.wangming.adminserver.logger.LoggerLocalCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,6 +24,8 @@ import java.io.IOException;
  **/
 @WebFilter(filterName = "ahttpTraceLogFilter", urlPatterns = "/api/*")
 public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpTraceLogFilter.class);
 
     @Override
     public int getOrder() {

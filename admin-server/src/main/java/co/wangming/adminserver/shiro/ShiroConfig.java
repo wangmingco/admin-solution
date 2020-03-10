@@ -62,6 +62,7 @@ public class ShiroConfig {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
 
         sessionManager.setSessionIdCookie(buildCookie());
+        sessionManager.setSessionIdCookieEnabled(true);
 
         sessionManager.setSessionIdUrlRewritingEnabled(false);
 
@@ -83,7 +84,7 @@ public class ShiroConfig {
     }
 
     public SimpleCookie buildCookie() {
-        SimpleCookie simpleCookie = new SimpleCookie("admin-solution");
+        SimpleCookie simpleCookie = new SimpleCookie("X-TOKEN");
         simpleCookie.setPath("/");
         // 将 HttpOnly 设为true, 增加对xss防护的安全系数, 只能通过http访问，javascript无法访问, 防止xss读取cookie
         simpleCookie.setHttpOnly(true);
@@ -115,11 +116,6 @@ public class ShiroConfig {
         filtersMap.put("apiAccessControlFilter", new ApiAccessControlFilter());
         shiroFilterFactoryBean.setFilters(filtersMap);
 
-        // 配置不会被拦截的链接 顺序判断
-        // 配置退出 过滤器,其中的具体WebAuthenticatingFilter的退出代码Shiro已经替我们实现了
-        // 过滤链定义，从上向下顺序执行，一般将/**放在最为下边
-        // authc:所有url都必须认证通过才可以访问;
-
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/#/login/**", "anon");
         filterChainDefinitionMap.put("/api/user/auth/login", "anon");
@@ -134,7 +130,7 @@ public class ShiroConfig {
         return shiroFilterFactoryBean;
     }
 
-    @Bean
+    //    @Bean
     public CorsFilter corsFilter() {
         //1.添加CORS配置信息
         CorsConfiguration config = new CorsConfiguration();

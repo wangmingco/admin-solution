@@ -3,10 +3,8 @@ package co.wangming.adminserver.service;
 import co.wangming.adminserver.controller.auth.UserAuthController;
 import co.wangming.adminserver.enums.ResponseCode;
 import co.wangming.adminserver.logger.LoggerFactory;
-import co.wangming.adminserver.util.MessageDigestUtil;
 import co.wangming.adminserver.vo.Response;
 import co.wangming.adminserver.vo.auth.LoginRequest;
-import co.wangming.adminserver.vo.auth.LoginResponse;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -40,15 +38,8 @@ public class UserAuthService {
 
             if (isAuthenticated) {
 
-                LoginResponse loginResponse = new LoginResponse();
-                String uid = username + System.currentTimeMillis();
-                String token = MessageDigestUtil.md5(uid);
-                subject.getSession().setAttribute("X-Token", token);
-
-                loginResponse.setToken(token);
-
-                LOGGER.info("登录成功");
-                return ResponseCode.SUCCESS.build(loginResponse);
+                LOGGER.info("登录成功, sessionId:{}", subject.getSession(false).getId());
+                return ResponseCode.SUCCESS.build();
             } else {
                 LOGGER.warn("登录失败, 用户名或者密码错误");
                 return ResponseCode.LOGIN_FAIL.build();

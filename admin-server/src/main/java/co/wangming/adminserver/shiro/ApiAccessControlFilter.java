@@ -10,7 +10,6 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.slf4j.Logger;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -27,47 +26,33 @@ public class ApiAccessControlFilter extends AccessControlFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
+        trySetUserLog();
+
         LOGGER.info("开始进行鉴权");
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
-        String requestToken = httpServletRequest.getHeader("X-Token");
-        if (StringUtils.isEmpty(requestToken)) {
-            LOGGER.warn("token验证失败  requestToken为空:{}", requestToken);
-            return false;
-        }
-
         Subject subject = SecurityUtils.getSubject();
-        trySetLogger(subject);
-
-        Object sessionToken = subject.getSession().getAttribute("X-Token");
-        if (StringUtils.isEmpty(sessionToken)) {
-            LOGGER.warn("token验证失败 sessionToken为空:{}", sessionToken);
-            return false;
-        }
-
-        if (!(requestToken.equals(sessionToken))) {
-            LOGGER.warn("token验证失败requestToken与sessionToken不相等. requestToken:{}, sessionToken:{}", requestToken, sessionToken);
-            return false;
-        }
 
         boolean isAuthenticated = subject.isAuthenticated();
         boolean isPermitted = subject.isPermitted(httpServletRequest.getRequestURI());
 
-        LOGGER.info("鉴权完成 isPermitted:{}, isAuthenticated:{}", isPermitted, isAuthenticated);
+        LOGGER.info("鉴权完成, isPermitted:{}, isAuthenticated:{}", isPermitted, isAuthenticated);
 
         return isPermitted && isAuthenticated;
     }
 
-    private void trySetLogger(Subject subject) {
+    private void trySetUserLog() {
+        Subject subject = SecurityUtils.getSubject();
         try {
-            Session session = subject.getSession();
-            Object user = session.getAttribute(PRINCIPALS_SESSION_KEY);
-            LoggerLocalCache.INSTANCE.setUser(user == null ? null : user.toString());
+            Session session = subject.getSession(false);
+            if (session != null) {
+                Object user = session.getAttribute(PRINCIPALS_SESSION_KEY);
+                LoggerLocalCache.INSTANCE.setUser(user == null ? null : user.toString());
+            }
         } catch (Exception e) {
             LOGGER.error("", e);
         }
-
     }
 
     @Override
@@ -76,10 +61,10 @@ public class ApiAccessControlFilter extends AccessControlFilter {
         Response response = ResponseCode.AUTH_FAIL.build();
 
         String result = JSON.toJSONString(response);
-        servletResponse.getOutputStream().write(result.getBytes());
+        servletResponse.getOutputStream().write(result.getBytes("UTF8"));
         servletResponse.flushBuffer();
 
-        return true;
+        return false;
     }
 
 
