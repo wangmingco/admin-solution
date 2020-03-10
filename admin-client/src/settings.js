@@ -1,19 +1,6 @@
-import variables from '@/styles/element-variables.scss'
+module.exports = {
 
-export default {
-  theme: variables.theme,
-
-  /**
-   * @type {boolean} true | false
-   * @description Whether show the settings right-panel
-   */
-  showSettings: true,
-
-  /**
-   * @type {boolean} true | false
-   * @description Whether need tagsView
-   */
-  tagsView: true,
+  title: 'Vue Admin Template',
 
   /**
    * @type {boolean} true | false
@@ -25,13 +12,5 @@ export default {
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: false,
-
-  /**
-   * @type {string | array} 'production' | ['production','development']
-   * @description Need show err logs component.
-   * The default is only used in the production env
-   * If you want to also use it in dev, you can pass ['production','development']
-   */
-  errorLog: 'production'
+  sidebarLogo: false
 }
