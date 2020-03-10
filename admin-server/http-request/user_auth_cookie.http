@@ -11,6 +11,8 @@ POST http://localhost:9900/api/user/auth/login
 Content-Type: application/json
 
 {
+  "username": "admin",
+  "password": "111111"
 }
 
 > {%

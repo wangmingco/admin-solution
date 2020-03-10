@@ -2,6 +2,7 @@ package co.wangming.adminserver.shiro;
 
 import co.wangming.adminserver.enums.AuthConstant;
 import co.wangming.adminserver.logger.LoggerFactory;
+import co.wangming.adminserver.util.SpringUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
@@ -11,6 +12,7 @@ import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -25,10 +27,13 @@ import java.util.Map;
 
 /**
  * 使用shiro 做权限控制
- * 1. 登录
- * 2. 登出
- * 3. 基于数据库的权限验证
- * 4. 用户/角色/权限 授权
+ *
+ * TODO
+ * CORS 配置
+ * XSS(Cross Site Scripting, 跨站脚本) 攻击
+ * CSRF(Cross-site requestforgery, 跨站请求伪造) 攻击
+ * SSRF(Server Side RequestForgery, 服务器端请求伪造) 攻击
+ *
  * <p>
  * Created By WangMing On 2020-03-02
  **/
@@ -36,6 +41,9 @@ import java.util.Map;
 public class ShiroConfig {
 
     private static final Logger LOGGER = LoggerFactory.getSystemLogger(ShiroConfig.class);
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Resource
     private SecurityManager securityManager;
@@ -52,7 +60,20 @@ public class ShiroConfig {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(shiroDatabaseRealm);
         securityManager.setSessionManager(buildSessionManager());
+        // TODO
 //		securityManager.setRememberMeManager();
+        // TODO
+//        securityManager.setSubjectDAO();
+        // TODO
+//        securityManager.setCacheManager();
+        // TODO
+//        securityManager.setAuthorizer();
+        // TODO
+//        securityManager.setAuthenticator();
+        // TODO
+//        securityManager.setSubjectFactory();
+        // TODO
+//        securityManager.setEventBus();
 
         LOGGER.info("defaultWebSecurityManager over");
         return securityManager;
@@ -61,9 +82,11 @@ public class ShiroConfig {
     private SessionManager buildSessionManager() {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
 
+        //
         sessionManager.setSessionIdCookie(buildCookie());
+        //
         sessionManager.setSessionIdCookieEnabled(true);
-
+        //
         sessionManager.setSessionIdUrlRewritingEnabled(false);
 
         // 全局会话超时时间（单位毫秒），默认30分钟
@@ -80,6 +103,15 @@ public class ShiroConfig {
         // 底层也是默认自动调用ExecutorServiceSessionValidationScheduler
         sessionManager.setSessionValidationInterval(AuthConstant.SessionValidationInterval);
 
+        // TODO
+//        sessionManager.setSessionDAO();
+        // TODO
+//        sessionManager.setSessionListeners();
+        // TODO
+//        sessionManager.setSessionValidationScheduler();
+        // TODO
+
+
         return sessionManager;
     }
 
@@ -90,6 +122,18 @@ public class ShiroConfig {
         simpleCookie.setHttpOnly(true);
         // 设置浏览器关闭时失效此Cookie
         simpleCookie.setMaxAge(-1);
+        // TODO
+//        simpleCookie.setComment();
+        // TODO
+//        simpleCookie.setDomain();
+        // TODO
+//        simpleCookie.setName();
+        // TODO
+//        simpleCookie.setSecure();
+        // TODO
+//        simpleCookie.setValue();
+        // TODO
+//        simpleCookie.setVersion();
         return simpleCookie;
     }
 
@@ -130,28 +174,33 @@ public class ShiroConfig {
         return shiroFilterFactoryBean;
     }
 
-    //    @Bean
+    @Bean
     public CorsFilter corsFilter() {
-        //1.添加CORS配置信息
+        // CORS配置信息
         CorsConfiguration config = new CorsConfiguration();
-        if (1 != 1) {
-            LOGGER.info("生产环境, 不允许跨域访问");
-            // 返回新的CorsFilter.
-            return new CorsFilter(new UrlBasedCorsConfigurationSource());
-        }
 
-        LOGGER.info("非生产环境, 允许跨域访问");
-        // 非生产环境, 允许跨域访问
-        //放行哪些原始域
-        config.addAllowedOrigin("*");
-        //是否发送Cookie信息
-        config.setAllowCredentials(true);
-        //放行哪些原始域(请求方式)
-        config.addAllowedMethod("*");
-        //放行哪些原始域(头部信息)
-        config.addAllowedHeader("*");
-        //暴露哪些头部信息（因为跨域访问默认不能获取全部头部信息）
-        config.addExposedHeader("Set-Cookie");
+        if (!SpringUtil.isInProduction(applicationContext)) {
+            LOGGER.info("进行非生产模式CORS配置");
+
+            // TODO 放行哪些原始域
+            config.addAllowedOrigin("*");
+
+            // TODO  是否发送Cookie信息
+            config.setAllowCredentials(true);
+
+            // TODO  放行哪些原始域(请求方式)
+            config.addAllowedMethod("*");
+
+            // TODO 放行哪些原始域(头部信息)
+            config.addAllowedHeader("*");
+
+            // TODO 暴露哪些头部信息（因为跨域访问默认不能获取全部头部信息）
+            config.addExposedHeader("Set-Cookie");
+
+            // TODO
+//        config.setMaxAge();
+
+        }
 
         UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
         configSource.registerCorsConfiguration("/**", config);

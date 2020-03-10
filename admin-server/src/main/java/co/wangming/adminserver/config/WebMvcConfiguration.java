@@ -22,6 +22,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new RequestCostTimeInterceptor());
         registry.addWebRequestInterceptor(new HttpRequestLogInterceptor());
-        logger.info("添加 HandlerInterceptor 完成");
+        logger.info("将RequestCostTimeInterceptor 添加进 InterceptorRegistry");
+        logger.info("将HttpRequestLogInterceptor 添加进 InterceptorRegistry");
     }
 }

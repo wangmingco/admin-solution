@@ -2,7 +2,7 @@ package co.wangming.adminserver.service;
 
 import co.wangming.adminserver.mapper.auth.UrlPathDicMapper;
 import co.wangming.adminserver.model.auth.UrlPathDic;
-import co.wangming.adminserver.util.SpringContext;
+import co.wangming.adminserver.util.SpringUtil;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
@@ -23,7 +23,7 @@ public class UrlPathDicService {
 
     public void insertPathUrls() {
 
-        RequestMappingHandlerMapping requestMappingHandlerMapping = SpringContext.getBean(RequestMappingHandlerMapping.class);
+        RequestMappingHandlerMapping requestMappingHandlerMapping = SpringUtil.getBean(RequestMappingHandlerMapping.class);
         for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : requestMappingHandlerMapping.getHandlerMethods().entrySet()) {
             RequestMappingInfo key = entry.getKey();
             for (String path : key.getPatternsCondition().getPatterns()) {
