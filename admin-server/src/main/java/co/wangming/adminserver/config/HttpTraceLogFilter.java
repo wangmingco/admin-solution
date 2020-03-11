@@ -21,6 +21,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Objects;
 
 /**
@@ -90,8 +92,10 @@ public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered 
                 traceLog.setTime(LocalDateTime.now().toString());
                 traceLog.setParameterMap(JSON.toJSONString(request.getParameterMap()));
                 traceLog.setStatus(status);
-                traceLog.setRequestBody(getRequestBody(request));
-                traceLog.setResponseBody(getResponseBody(response));
+
+                setRequestHeaderAndBody(request, traceLog);
+                setResponseHeaderAndBody(response, traceLog);
+
                 log.info("Http 请求日志: {}", traceLog);
             }
             updateResponse(response);
@@ -107,30 +111,44 @@ public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered 
         }
     }
 
-    private String getRequestBody(HttpServletRequest request) {
-        String requestBody = "";
+    private void setRequestHeaderAndBody(HttpServletRequest request, HttpTraceLog traceLog) {
         ContentCachingRequestWrapper wrapper = WebUtils.getNativeRequest(request, ContentCachingRequestWrapper.class);
-        if (wrapper != null) {
-            try {
-                requestBody = IOUtils.toString(wrapper.getContentAsByteArray(), wrapper.getCharacterEncoding());
-            } catch (IOException e) {
-                // NOOP
-            }
+        if (wrapper == null) {
+            return;
         }
-        return requestBody;
+        try {
+            StringBuilder stringBuilder = new StringBuilder();
+            Enumeration<String> headerNames = wrapper.getHeaderNames();
+            while (headerNames.hasMoreElements()) {
+                String headerName = headerNames.nextElement();
+                stringBuilder.append("\n            ").append(headerName).append(": ").append(wrapper.getHeader(headerName));
+            }
+
+            traceLog.requestHeaders = stringBuilder.toString();
+            traceLog.requestBody = IOUtils.toString(wrapper.getContentAsByteArray(), wrapper.getCharacterEncoding());
+        } catch (IOException e) {
+            // NOOP
+        }
     }
 
-    private String getResponseBody(HttpServletResponse response) {
-        String responseBody = "";
+    private void setResponseHeaderAndBody(HttpServletResponse response, HttpTraceLog traceLog) {
         ContentCachingResponseWrapper wrapper = WebUtils.getNativeResponse(response, ContentCachingResponseWrapper.class);
-        if (wrapper != null) {
-            try {
-                responseBody = IOUtils.toString(wrapper.getContentAsByteArray(), wrapper.getCharacterEncoding());
-            } catch (IOException e) {
-                // NOOP
-            }
+        if (wrapper == null) {
+            return;
         }
-        return responseBody;
+
+        try {
+            StringBuilder stringBuilder = new StringBuilder();
+            Collection<String> headerNames = wrapper.getHeaderNames();
+            for (String headerName : headerNames) {
+                stringBuilder.append("\n            ").append(headerName).append(": ").append(wrapper.getHeader(headerName));
+            }
+            traceLog.responseHeaders = stringBuilder.toString();
+
+            traceLog.responseBody = IOUtils.toString(wrapper.getContentAsByteArray(), wrapper.getCharacterEncoding());
+        } catch (IOException e) {
+            // NOOP
+        }
     }
 
     private void updateResponse(HttpServletResponse response) throws IOException {
@@ -147,7 +165,9 @@ public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered 
         private Long timeTaken;
         private String time;
         private Integer status;
+        private String requestHeaders;
         private String requestBody;
+        private String responseHeaders;
         private String responseBody;
 
         public String getPath() {
@@ -214,6 +234,22 @@ public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered 
             this.responseBody = responseBody;
         }
 
+        public String getRequestHeaders() {
+            return requestHeaders;
+        }
+
+        public void setRequestHeaders(String requestHeaders) {
+            this.requestHeaders = requestHeaders;
+        }
+
+        public String getResponseHeaders() {
+            return responseHeaders;
+        }
+
+        public void setResponseHeaders(String responseHeaders) {
+            this.responseHeaders = responseHeaders;
+        }
+
         @Override
         public String toString() {
             return "HttpTraceLog{" +
@@ -223,7 +259,9 @@ public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered 
                     "\n     timeTaken=" + timeTaken + "," +
                     "\n     time='" + time + "\'," +
                     "\n     status=" + status + "," +
+                    "\n     requestHeaders='" + requestHeaders + "\'," +
                     "\n     requestBody='" + requestBody + "\'," +
+                    "\n     responseHeaders='" + responseHeaders + "\'," +
                     "\n     responseBody='" + responseBody + "\'," +
                     '}';
         }
