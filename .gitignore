@@ -62,6 +62,8 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
+admin-server/.idea
+admin-server/.mvn
 .idea
 *.iws
 *.iml
