@@ -29,10 +29,12 @@ import java.util.Map;
  * 使用shiro 做权限控制
  *
  * TODO
- * CORS 配置
+ * CORS(Cross-Origin Resource Sharing，跨域资源共享) 配置
+ *
  * XSS(Cross Site Scripting, 跨站脚本) 攻击
  * CSRF(Cross-site requestforgery, 跨站请求伪造) 攻击
  * SSRF(Server Side RequestForgery, 服务器端请求伪造) 攻击
+ *
  *
  * <p>
  * Created By WangMing On 2020-03-02

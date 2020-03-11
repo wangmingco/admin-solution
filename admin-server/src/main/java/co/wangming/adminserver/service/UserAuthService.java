@@ -3,7 +3,9 @@ package co.wangming.adminserver.service;
 import co.wangming.adminserver.controller.auth.UserAuthController;
 import co.wangming.adminserver.enums.ResponseCode;
 import co.wangming.adminserver.logger.LoggerFactory;
+import co.wangming.adminserver.util.UserUtil;
 import co.wangming.adminserver.vo.Response;
+import co.wangming.adminserver.vo.auth.InfoResponse;
 import co.wangming.adminserver.vo.auth.LoginRequest;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -59,7 +61,12 @@ public class UserAuthService {
     }
 
     public Response info() {
-        return ResponseCode.SUCCESS.build();
+        InfoResponse info = new InfoResponse();
+
+        info.setName(UserUtil.getCurrentUserName());
+        info.setName("admin");
+
+        return ResponseCode.SUCCESS.build(info);
     }
 
     public Response logout() {

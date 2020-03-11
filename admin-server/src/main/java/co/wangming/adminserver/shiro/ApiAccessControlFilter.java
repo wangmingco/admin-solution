@@ -3,10 +3,10 @@ package co.wangming.adminserver.shiro;
 import co.wangming.adminserver.enums.ResponseCode;
 import co.wangming.adminserver.logger.LoggerFactory;
 import co.wangming.adminserver.logger.LoggerLocalCache;
+import co.wangming.adminserver.util.UserUtil;
 import co.wangming.adminserver.vo.Response;
 import com.alibaba.fastjson.JSON;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.slf4j.Logger;
@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-
-import static org.apache.shiro.subject.support.DefaultSubjectContext.PRINCIPALS_SESSION_KEY;
 
 /**
  * Created By WangMing On 2020-03-02
@@ -43,16 +41,7 @@ public class ApiAccessControlFilter extends AccessControlFilter {
     }
 
     private void trySetUserLog() {
-        Subject subject = SecurityUtils.getSubject();
-        try {
-            Session session = subject.getSession(false);
-            if (session != null) {
-                Object user = session.getAttribute(PRINCIPALS_SESSION_KEY);
-                LoggerLocalCache.INSTANCE.setUser(user == null ? null : user.toString());
-            }
-        } catch (Exception e) {
-            LOGGER.error("", e);
-        }
+        LoggerLocalCache.INSTANCE.setUser(UserUtil.getCurrentUserName());
     }
 
     @Override

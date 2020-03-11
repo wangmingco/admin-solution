@@ -34,7 +34,7 @@ import java.util.Objects;
  **/
 public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered {
 
-    private static final Logger log = LoggerFactory.getUserLogger(HttpTraceLogFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getUserLogger(HttpTraceLogFilter.class);
 
     private static final String NEED_TRACE_PATH_PREFIX = "/api/";
     private static final String IGNORE_CONTENT_TYPE = "multipart/form-data";
@@ -80,9 +80,6 @@ public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered 
             String path = request.getRequestURI();
             if (path.startsWith(NEED_TRACE_PATH_PREFIX) && !Objects.equals(IGNORE_CONTENT_TYPE, request.getContentType())) {
 
-                String requestBody = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
-                log.info(requestBody);
-                //1. 记录日志
                 HttpTraceLog traceLog = new HttpTraceLog();
                 traceLog.setPath(path);
                 traceLog.setMethod(request.getMethod());
@@ -94,7 +91,7 @@ public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered 
                 setRequestHeaderAndBody(request, traceLog);
                 setResponseHeaderAndBody(response, traceLog);
 
-                log.info("Http 请求日志: {}", traceLog);
+                LOGGER.info("Http 请求日志: {}", traceLog);
             }
             updateResponse(response);
         }
@@ -114,6 +111,8 @@ public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered 
         if (wrapper == null) {
             return;
         }
+        LOGGER.info("request wrapper CharacterEncoding: {}", wrapper.getCharacterEncoding());
+
         try {
             StringBuilder stringBuilder = new StringBuilder();
             Enumeration<String> headerNames = wrapper.getHeaderNames();
@@ -123,7 +122,7 @@ public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered 
             }
 
             traceLog.requestHeaders = stringBuilder.toString();
-            traceLog.requestBody = IOUtils.toString(wrapper.getContentAsByteArray(), wrapper.getCharacterEncoding());
+            traceLog.requestBody = IOUtils.toString(wrapper.getContentAsByteArray(), StandardCharsets.UTF_8.toString());
         } catch (IOException e) {
             // NOOP
         }
@@ -134,6 +133,7 @@ public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered 
         if (wrapper == null) {
             return;
         }
+        LOGGER.info("response wrapper CharacterEncoding: {}", wrapper.getCharacterEncoding());
 
         try {
             StringBuilder stringBuilder = new StringBuilder();
@@ -143,7 +143,7 @@ public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered 
             }
             traceLog.responseHeaders = stringBuilder.toString();
 
-            traceLog.responseBody = IOUtils.toString(wrapper.getContentAsByteArray(), wrapper.getCharacterEncoding());
+            traceLog.responseBody = IOUtils.toString(wrapper.getContentAsByteArray(), StandardCharsets.UTF_8.toString());
         } catch (IOException e) {
             // NOOP
         }
