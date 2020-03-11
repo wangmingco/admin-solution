@@ -26,12 +26,18 @@
 		<jmockit.version>1.49</jmockit.version>
 		<junit.version>4.13</junit.version>
 		<apache.collections4.version>4.4</apache.collections4.version>
+		<apache.io.version>2.6</apache.io.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
 		<!-- 权限验证 -->
@@ -67,6 +73,14 @@
 			<artifactId>commons-collections4</artifactId>
 			<version>${apache.collections4.version}</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${apache.io.version}</version>
+		</dependency>
+
 
 		<!-- 测试mock框架 -->
 		<dependency>
@@ -108,6 +122,7 @@
 			</activation>
 			<properties>
 				<profiles.active>dev</profiles.active>
+				<enable.trace.http.log>true</enable.trace.http.log>
 			</properties>
 		</profile>
 
@@ -118,6 +133,7 @@
 			</activation>
 			<properties>
 				<profiles.active>test</profiles.active>
+				<enable.trace.http.log>true</enable.trace.http.log>
 			</properties>
 		</profile>
 
@@ -128,6 +144,7 @@
 			</activation>
 			<properties>
 				<profiles.active>beta</profiles.active>
+				<enable.trace.http.log>true</enable.trace.http.log>
 			</properties>
 		</profile>
 
@@ -138,6 +155,7 @@
 			</activation>
 			<properties>
 				<profiles.active>production</profiles.active>
+				<enable.trace.http.log>false</enable.trace.http.log>
 			</properties>
 		</profile>
 

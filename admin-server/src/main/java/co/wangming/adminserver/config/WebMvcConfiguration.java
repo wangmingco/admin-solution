@@ -1,8 +1,11 @@
 package co.wangming.adminserver.config;
 
 import co.wangming.adminserver.logger.LoggerFactory;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -25,4 +28,12 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         logger.info("将RequestCostTimeInterceptor 添加进 InterceptorRegistry");
         logger.info("将HttpRequestLogInterceptor 添加进 InterceptorRegistry");
     }
+
+    @Bean
+    @ConditionalOnProperty(name = "enable.trace.http.log", havingValue = "true")
+    public HttpTraceLogFilter httpTraceLogFilter(MeterRegistry registry) {
+        logger.info("开启http trace log");
+        return new HttpTraceLogFilter();
+    }
+
 }
