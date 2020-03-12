@@ -17,6 +17,8 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 /**
  * Created By WangMing On 2020-03-02
  **/
@@ -71,7 +73,11 @@ public class UserAuthService {
         InfoResponse info = new InfoResponse();
 
         info.setName(UserUtil.getCurrentUserName());
-        info.setName("admin");
+        info.setAvatar("admin");
+        info.setIntroduction("admin");
+        info.setRoles(new ArrayList() {{
+            add("admin");
+        }});
 
         return ResponseCode.SUCCESS.build(info);
     }
