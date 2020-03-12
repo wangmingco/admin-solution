@@ -25,6 +25,8 @@ import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static co.wangming.adminserver.enums.AuthConstant.TOKEN_NAME;
+
 /**
  * 使用shiro 做权限控制
  *
@@ -118,9 +120,9 @@ public class ShiroConfig {
     }
 
     public SimpleCookie buildCookie() {
-        SimpleCookie simpleCookie = new SimpleCookie("X-TOKEN");
+        SimpleCookie simpleCookie = new SimpleCookie(TOKEN_NAME);
         simpleCookie.setPath("/");
-        // 将 HttpOnly 设为true, 增加对xss防护的安全系数, 只能通过http访问，javascript无法访问, 防止xss读取cookie
+        // 对服务器生成的TOKEN设置 HttpOnly 属性. 前端无法读写该TOKEN, 提供系统安全, 防止XSS攻击
         simpleCookie.setHttpOnly(true);
         // 设置浏览器关闭时失效此Cookie
         simpleCookie.setMaxAge(-1);

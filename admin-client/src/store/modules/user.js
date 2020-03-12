@@ -33,8 +33,8 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        commit('SET_TOKEN', '这是一个无用的token,需要删除')
-        setToken('这是一个无用的token,需要删除')
+        commit('SET_TOKEN', response.token)
+        setToken(response.token)
         resolve()
       }).catch(error => {
         reject(error)
