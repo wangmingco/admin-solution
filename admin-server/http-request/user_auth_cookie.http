@@ -35,3 +35,8 @@ GET http://localhost:9900/api/user/auth/info
 Cookie: {{XTOKEN}}}
 
 ###
+
+POST http://localhost:9900/api/user/auth/logout
+Cookie: {{XTOKEN}}}
+
+###
