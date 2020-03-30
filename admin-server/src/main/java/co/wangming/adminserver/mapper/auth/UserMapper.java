@@ -1,10 +1,7 @@
 package co.wangming.adminserver.mapper.auth;
 
 import co.wangming.adminserver.model.auth.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -22,4 +19,7 @@ public interface UserMapper {
 
     @Insert("INSERT INTO User (username, password, status) VALUES(#{username}, #{password}, 1)")
     int insertOneUser(User user);
+
+    @Delete("DELETE FROM User WHERE id = #{userId}")
+    int deleteUserById(@Param("userId") long userId);
 }

@@ -4,7 +4,6 @@ import co.wangming.adminserver.logger.LoggerFactory;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.MDC;
-import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created By WangMing On 2020-03-02
  **/
-@Component
 public class RequestCostTimeInterceptor extends HandlerInterceptorAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getUserLogger(RequestCostTimeInterceptor.class);
@@ -86,9 +84,9 @@ public class RequestCostTimeInterceptor extends HandlerInterceptorAdapter {
             LOGGER.error("[调用计时器] 记录耗时异常", e);
         } finally {
             threadLocal.remove();
+            super.afterCompletion(request, response, handler, ex);
         }
 
-        super.afterCompletion(request, response, handler, ex);
     }
 
     public static class CostTimeData {

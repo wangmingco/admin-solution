@@ -1,12 +1,10 @@
 package co.wangming.adminserver.shiro;
 
 import co.wangming.adminserver.logger.LoggerFactory;
-import co.wangming.adminserver.mapper.auth.PermissionMapper;
-import co.wangming.adminserver.mapper.auth.RoleMapper;
-import co.wangming.adminserver.mapper.auth.UserMapper;
 import co.wangming.adminserver.model.auth.Permission;
 import co.wangming.adminserver.model.auth.Role;
 import co.wangming.adminserver.model.auth.User;
+import co.wangming.adminserver.service.AuthorityService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -30,11 +28,7 @@ public class DatabaseRealm extends AuthorizingRealm {
     private static final Logger LOGGER = LoggerFactory.getSystemLogger(DatabaseRealm.class);
 
     @Resource
-    private UserMapper userMapper;
-    @Resource
-    private RoleMapper roleMapper;
-    @Resource
-    private PermissionMapper permissionMapper;
+    private AuthorityService authorityService;
 
     /**
      * 认证, 根据用户名找到密码进行验证
@@ -45,7 +39,7 @@ public class DatabaseRealm extends AuthorizingRealm {
 
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         String username = token.getUsername();
-        User user = userMapper.selectOneUserByName(username);
+        User user = authorityService.selectOneUserByName(username);
         if (user == null) {
             LOGGER.warn("认证结束 找不到用户");
             return null;
@@ -67,20 +61,20 @@ public class DatabaseRealm extends AuthorizingRealm {
 
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 
-        User user = userMapper.selectOneUserByName(username);
+        User user = authorityService.selectOneUserByName(username);
         if (user == null) {
             LOGGER.info("授权结束, 找不到用户");
             return authorizationInfo;
         }
 
-        List<Role> roles = roleMapper.selectRolesByUserId(user.getId());
+        List<Role> roles = authorityService.selectRolesByUserId(user.getId());
         if (CollectionUtils.isNotEmpty(roles)) {
             Set<String> roleNames = roles.stream().map(it -> it.getRoleName()).collect(Collectors.toSet());
             authorizationInfo.setRoles(roleNames);
 
             Set<Long> roleIds = roles.stream().map(it -> it.getId()).collect(Collectors.toSet());
 
-            List<Permission> permisions = permissionMapper.selectPermissionsByRoleIds(roleIds);
+            List<Permission> permisions = authorityService.selectPermissionsByRoleIds(roleIds);
 
             if (CollectionUtils.isNotEmpty(permisions)) {
                 Set<String> paths = permisions.stream().map(it -> it.getPath()).collect(Collectors.toSet());

@@ -1,10 +1,7 @@
 package co.wangming.adminserver.mapper.auth;
 
 import co.wangming.adminserver.model.auth.Permission;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Set;
@@ -27,5 +24,8 @@ public interface PermissionMapper {
     List<Permission> selectPermissionsByRoleIds(@Param("roleIds") Set<Long> roleIds);
 
     @Insert("INSERT INTO Permission (permissionName, path, status) VALUES(#{permissionName}, #{path}, 1)")
-    int insertOnePermission(Permission user);
+    int insertOnePermission(Permission permission);
+
+    @Delete("DELETE FROM Permission WHERE id = #{permissionId}")
+    int deletePermissionById(@Param("permissionId") long permissionId);
 }

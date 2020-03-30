@@ -1,4 +1,4 @@
-package co.wangming.adminserver.controller.auth;
+package co.wangming.adminserver.controller.user;
 
 import co.wangming.adminserver.AdminServerApplicationTests;
 import co.wangming.adminserver.mapper.auth.RolePermissionRelationMapper;
@@ -28,7 +28,7 @@ import java.net.URL;
  **/
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "application-test.properties", classes = AdminServerApplicationTests.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserAuthControllerTest {
+public class AuthControllerTest {
 
     /***************** 将数据库部分mock掉 ************************/
     @Tested

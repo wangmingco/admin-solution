@@ -1,6 +1,8 @@
 package co.wangming.adminserver.service;
 
+import co.wangming.adminserver.mapper.auth.PermissionMapper;
 import co.wangming.adminserver.mapper.auth.UrlPathDicMapper;
+import co.wangming.adminserver.model.auth.Permission;
 import co.wangming.adminserver.model.auth.UrlPathDic;
 import co.wangming.adminserver.util.SpringUtil;
 import org.springframework.dao.DuplicateKeyException;
@@ -21,6 +23,9 @@ public class UrlPathDicService {
     @Resource
     private UrlPathDicMapper urlPathDicMapper;
 
+    @Resource
+    private PermissionMapper permissionMapper;
+
     public void insertPathUrls() {
 
         RequestMappingHandlerMapping requestMappingHandlerMapping = SpringUtil.getBean(RequestMappingHandlerMapping.class);
@@ -33,6 +38,14 @@ public class UrlPathDicService {
                     urlPathDic.setPathName(path);
 
                     urlPathDicMapper.insertOneUrlPathDic(urlPathDic);
+                } catch (DuplicateKeyException e) {
+                }
+
+                try {
+                    Permission permission = new Permission();
+                    permission.setPath(path);
+                    permission.setPermissionName(path);
+                    permissionMapper.insertOnePermission(permission);
                 } catch (DuplicateKeyException e) {
                 }
             }

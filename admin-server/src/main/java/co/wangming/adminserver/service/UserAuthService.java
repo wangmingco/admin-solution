@@ -1,6 +1,6 @@
 package co.wangming.adminserver.service;
 
-import co.wangming.adminserver.controller.auth.UserAuthController;
+import co.wangming.adminserver.controller.user.AuthController;
 import co.wangming.adminserver.enums.ResponseCode;
 import co.wangming.adminserver.logger.LoggerFactory;
 import co.wangming.adminserver.util.MessageDigestUtil;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 @Service("shiroUserService")
 public class UserAuthService {
 
-    private static final Logger LOGGER = LoggerFactory.getUserLogger(UserAuthController.class);
+    private static final Logger LOGGER = LoggerFactory.getUserLogger(AuthController.class);
 
     public Response login(LoginRequest loginRequest) {
 

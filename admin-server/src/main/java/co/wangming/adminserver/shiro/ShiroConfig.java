@@ -29,10 +29,10 @@ import static co.wangming.adminserver.enums.AuthConstant.TOKEN_NAME;
 
 /**
  * 使用shiro 做权限控制
- *
+ * <p>
  * TODO
  * CORS(Cross-Origin Resource Sharing，跨域资源共享) 配置
- *
+ * <p>
  * XSS(Cross Site Scripting, 跨站脚本) 攻击
  * CSRF(Cross-site requestforgery, 跨站请求伪造) 攻击
  * SSRF(Server Side RequestForgery, 服务器端请求伪造) 攻击

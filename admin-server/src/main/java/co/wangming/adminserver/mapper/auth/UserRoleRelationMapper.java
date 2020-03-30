@@ -1,10 +1,7 @@
 package co.wangming.adminserver.mapper.auth;
 
 import co.wangming.adminserver.model.auth.UserRoleRelation;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -22,4 +19,7 @@ public interface UserRoleRelationMapper {
 
     @Insert("INSERT INTO UserRoleRelation (roleId, userId, status) VALUES(#{roleId}, #{userId}, 1)")
     int insertOneUserRoleRelation(UserRoleRelation user);
+
+    @Delete("DELETE FROM UserRoleRelation WHERE roleId = #{roleId} AND userId = #{userId}")
+    int deleteUserRoleRelationBy(@Param("roleId") long roleId, @Param("userId") long userId);
 }

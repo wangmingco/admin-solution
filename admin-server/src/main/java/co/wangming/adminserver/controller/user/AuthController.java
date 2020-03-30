@@ -1,4 +1,4 @@
-package co.wangming.adminserver.controller.auth;
+package co.wangming.adminserver.controller.user;
 
 import co.wangming.adminserver.logger.LoggerFactory;
 import co.wangming.adminserver.service.UserAuthService;
@@ -15,9 +15,9 @@ import javax.annotation.Resource;
  **/
 @RestController
 @RequestMapping("/api/user/auth")
-public class UserAuthController {
+public class AuthController {
 
-    private static final Logger LOGGER = LoggerFactory.getUserLogger(UserAuthController.class);
+    private static final Logger LOGGER = LoggerFactory.getUserLogger(AuthController.class);
 
     @Resource
     private UserAuthService userAuthService;

@@ -3,7 +3,6 @@ package co.wangming.adminserver.config;
 import co.wangming.adminserver.logger.LoggerFactory;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,14 +17,11 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     private static final Logger logger = LoggerFactory.getSystemLogger(WebMvcConfiguration.class);
 
-    @Autowired
-    RequestCostTimeInterceptor requestCostTimeInterceptor;
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new RequestCostTimeInterceptor());
-        registry.addWebRequestInterceptor(new HttpRequestLogInterceptor());
+        registry.addInterceptor(new RequestCostTimeInterceptor()).addPathPatterns("/api/**");
         logger.info("将RequestCostTimeInterceptor 添加进 InterceptorRegistry");
+        registry.addWebRequestInterceptor(new HttpRequestLogInterceptor()).addPathPatterns("/api/**");
         logger.info("将HttpRequestLogInterceptor 添加进 InterceptorRegistry");
     }
 
