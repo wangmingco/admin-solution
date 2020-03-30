@@ -23,29 +23,6 @@ export function getRolesByUserId(params) {
   })
 }
 
-export function getPermissions() {
-  return request({
-    url: '/api/user/authority/getPermissions',
-    method: 'get'
-  })
-}
-
-export function getPermissionsByRoleId(params) {
-  return request({
-    url: '/api/user/authority/getPermissionsByRoleId',
-    method: 'get',
-    params
-  })
-}
-
-export function updateRolePermission(params) {
-  return request({
-    url: '/api/user/authority/updateRolePermission',
-    method: 'post',
-    data: params
-  })
-}
-
 export function updateUserRole(params) {
   return request({
     url: '/api/user/authority/updateUserRole',
@@ -53,3 +30,27 @@ export function updateUserRole(params) {
     data: params
   })
 }
+
+export function getBackendPermissions() {
+  return request({
+    url: '/api/user/authority/getBackendPermissions',
+    method: 'get'
+  })
+}
+
+export function getBackendPermissionsByRoleId(params) {
+  return request({
+    url: '/api/user/authority/getBackendPermissionsByRoleId',
+    method: 'get',
+    params
+  })
+}
+
+export function updateRoleBackendPermission(params) {
+  return request({
+    url: '/api/user/authority/updateRoleBackendPermission',
+    method: 'post',
+    data: params
+  })
+}
+

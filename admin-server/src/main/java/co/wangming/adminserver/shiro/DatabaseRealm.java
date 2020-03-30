@@ -1,7 +1,7 @@
 package co.wangming.adminserver.shiro;
 
 import co.wangming.adminserver.logger.LoggerFactory;
-import co.wangming.adminserver.model.auth.Permission;
+import co.wangming.adminserver.model.auth.BackendPermission;
 import co.wangming.adminserver.model.auth.Role;
 import co.wangming.adminserver.model.auth.User;
 import co.wangming.adminserver.service.AuthorityService;
@@ -74,7 +74,7 @@ public class DatabaseRealm extends AuthorizingRealm {
 
             Set<Long> roleIds = roles.stream().map(it -> it.getId()).collect(Collectors.toSet());
 
-            List<Permission> permisions = authorityService.selectPermissionsByRoleIds(roleIds);
+            List<BackendPermission> permisions = authorityService.selectPermissionsByRoleIds(roleIds);
 
             if (CollectionUtils.isNotEmpty(permisions)) {
                 Set<String> paths = permisions.stream().map(it -> it.getPath()).collect(Collectors.toSet());

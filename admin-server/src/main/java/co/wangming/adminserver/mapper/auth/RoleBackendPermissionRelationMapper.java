@@ -9,17 +9,17 @@ import java.util.List;
  * Created By WangMing On 2020-03-01
  **/
 @Mapper
-public interface RolePermissionRelationMapper {
+public interface RoleBackendPermissionRelationMapper {
 
-    @Select("SELECT * FROM RolePermissionRelation")
+    @Select("SELECT * FROM RoleBackendPermissionRelation")
     List<RolePermissionRelation> selectAllRolePermissionRelations();
 
-    @Select("SELECT * FROM RolePermissionRelation where roleId = #{roleId}")
+    @Select("SELECT * FROM RoleBackendPermissionRelation where roleId = #{roleId}")
     List<RolePermissionRelation> selectRolePermissionRelationByRoleId(long roleId);
 
-    @Insert("INSERT INTO RolePermissionRelation (roleId, permissionId, status) VALUES(#{roleId}, #{permissionId}, 1)")
+    @Insert("INSERT INTO RoleBackendPermissionRelation (roleId, permissionId, status) VALUES(#{roleId}, #{permissionId}, 1)")
     int insertOneRolePermissionRelation(RolePermissionRelation rolePermissionRelation);
 
-    @Delete("DELETE FROM RolePermissionRelation WHERE roleId = #{roleId} AND permissionId = #{permissionId}")
+    @Delete("DELETE FROM RoleBackendPermissionRelation WHERE roleId = #{roleId} AND permissionId = #{permissionId}")
     int deleteRolePermissionRelationBy(@Param("roleId") long roleId, @Param("permissionId") long permissionId);
 }

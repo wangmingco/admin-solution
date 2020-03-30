@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { getRoles, getPermissions, getPermissionsByRoleId, updateRolePermission } from '@/api/authority'
+import { getRoles, getBackendPermissions, getBackendPermissionsByRoleId, updateRoleBackendPermission } from '@/api/authority'
 
 export default {
    data() {
@@ -72,7 +72,7 @@ export default {
       })
     },
     initPermissions() {
-      getPermissions().then(response => {
+      getBackendPermissions().then(response => {
         this.permissions = response.data.permissions.dataList
       })
     },
@@ -85,7 +85,7 @@ export default {
       var params = {
         roleId: row.id
       }
-      getPermissionsByRoleId(params).then(response => {
+      getBackendPermissionsByRoleId(params).then(response => {
         this.checkedPermissions = response.data.permissions.dataList.map(item => item.permissionName)
       })
     },
@@ -99,7 +99,7 @@ export default {
           permissionId: value,
           roleId: this.selectedRole.id
       }
-      updateRolePermission(params).then(response => {
+      updateBackendRolePermission(params).then(response => {
         console.log("updateRolePermission", response)
       })
     }

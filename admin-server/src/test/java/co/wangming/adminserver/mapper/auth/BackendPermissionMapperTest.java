@@ -1,7 +1,7 @@
 package co.wangming.adminserver.mapper.auth;
 
 import co.wangming.adminserver.AdminServerApplicationTests;
-import co.wangming.adminserver.model.auth.Permission;
+import co.wangming.adminserver.model.auth.BackendPermission;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,10 +18,10 @@ import java.util.List;
  **/
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "application.properties", classes = AdminServerApplicationTests.class)
-public class PermissionMapperTest {
+public class BackendPermissionMapperTest {
 
     @Resource
-    private PermissionMapper permissionMapper;
+    private BackendPermissionMapper backendPermissionMapper;
 
     @Test
     @Rollback
@@ -32,10 +32,10 @@ public class PermissionMapperTest {
     }
 
     private void insert() throws Exception {
-        Permission permission = new Permission();
-        permission.setPermissionName("test");
-        permission.setPath("/path/selectAll");
-        int num = permissionMapper.insertOnePermission(permission);
+        BackendPermission backendPermission = new BackendPermission();
+        backendPermission.setPermissionName("test");
+        backendPermission.setPath("/path/selectAll");
+        int num = backendPermissionMapper.insertOnePermission(backendPermission);
         Assert.assertEquals(1, num);
     }
 
@@ -45,7 +45,7 @@ public class PermissionMapperTest {
     public void testSelectAll() throws Exception {
 
         insert();
-        List<Permission> all = permissionMapper.selectAllPermissions();
+        List<BackendPermission> all = backendPermissionMapper.selectAllPermissions();
         Assert.assertEquals(1, all.size());
         Assert.assertEquals("test", all.get(0).getPermissionName());
 

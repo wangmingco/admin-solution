@@ -1,6 +1,6 @@
 package co.wangming.adminserver.vo.auth;
 
-import co.wangming.adminserver.model.auth.Permission;
+import co.wangming.adminserver.model.auth.BackendPermission;
 import co.wangming.adminserver.vo.TableData;
 
 import java.util.HashMap;
@@ -21,8 +21,8 @@ public class GetPermissionsResponse {
         this.permissions = permissions;
     }
 
-    public static GetPermissionsResponse build(List<Permission> permissions) {
-        TableData tableData = TableData.build(permissions, permission -> new HashMap() {{
+    public static GetPermissionsResponse build(List<BackendPermission> backendPermissions) {
+        TableData tableData = TableData.build(backendPermissions, permission -> new HashMap() {{
             put("id", permission.getId());
             put("path", permission.getPath());
             put("permissionName", permission.getPermissionName());

@@ -5,7 +5,7 @@ import co.wangming.adminserver.model.BaseModel;
 /**
  * Created By WangMing On 2020-03-01
  **/
-public class Permission extends BaseModel {
+public class BackendPermission extends BaseModel {
 
     private long id;
     private String permissionName;

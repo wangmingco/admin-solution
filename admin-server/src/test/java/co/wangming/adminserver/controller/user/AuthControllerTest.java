@@ -1,7 +1,7 @@
 package co.wangming.adminserver.controller.user;
 
 import co.wangming.adminserver.AdminServerApplicationTests;
-import co.wangming.adminserver.mapper.auth.RolePermissionRelationMapper;
+import co.wangming.adminserver.mapper.auth.RoleBackendPermissionRelationMapper;
 import co.wangming.adminserver.mapper.auth.UserMapper;
 import co.wangming.adminserver.mapper.auth.UserRoleRelationMapper;
 import co.wangming.adminserver.model.auth.User;
@@ -38,7 +38,7 @@ public class AuthControllerTest {
     @Injectable
     private UserRoleRelationMapper userRoleRelationMapper;
     @Injectable
-    private RolePermissionRelationMapper rolePermissionRelationMapper;
+    private RoleBackendPermissionRelationMapper roleBackendPermissionRelationMapper;
 
     /*****************web controller 测试设置************************/
     @LocalServerPort

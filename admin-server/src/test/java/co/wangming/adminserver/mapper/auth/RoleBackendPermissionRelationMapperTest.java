@@ -18,10 +18,10 @@ import java.util.List;
  **/
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "application.properties", classes = AdminServerApplicationTests.class)
-public class RolePermissionRelationMapperTest {
+public class RoleBackendPermissionRelationMapperTest {
 
     @Resource
-    private RolePermissionRelationMapper mapper;
+    private RoleBackendPermissionRelationMapper mapper;
 
     @Test
     @Rollback

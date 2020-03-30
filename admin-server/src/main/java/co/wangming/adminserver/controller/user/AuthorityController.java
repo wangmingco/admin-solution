@@ -26,6 +26,10 @@ public class AuthorityController {
     @Resource
     private AuthorityService authorityService;
 
+    /******************************************************************************************
+     *                                  用户相关api接口
+     * ****************************************************************************************
+     */
     @PostMapping("addUser")
     public Response addUser() {
         // TODO
@@ -43,6 +47,10 @@ public class AuthorityController {
         return ResponseCode.SUCCESS.build(response);
     }
 
+    /******************************************************************************************
+     *                                  角色相关api接口
+     * ****************************************************************************************
+     */
     @PostMapping("addRole")
     public Response addRoles() {
         // TODO
@@ -60,16 +68,6 @@ public class AuthorityController {
         return ResponseCode.SUCCESS.build(response);
     }
 
-    @GetMapping("getPermissions")
-    public Response getPermissions() {
-
-        List<Permission> permissions = authorityService.selectAllPermissions();
-
-        GetPermissionsResponse response = GetPermissionsResponse.build(permissions);
-
-        return ResponseCode.SUCCESS.build(response);
-    }
-
     @GetMapping("getRolesByUserId")
     public Response getRolesByUserId(@Param("userId") long userId) {
 
@@ -78,34 +76,6 @@ public class AuthorityController {
         GetRolesResponse response = GetRolesResponse.build(roles);
 
         return ResponseCode.SUCCESS.build(response);
-    }
-
-    @GetMapping("getPermissionsByRoleId")
-    public Response getPermissionsByRole(@Param("roleId") String roleId) {
-
-        List<Permission> permissions = authorityService.selectPermissionsByRoleIds(new HashSet() {{
-            add(roleId);
-        }});
-
-        GetPermissionsResponse response = GetPermissionsResponse.build(permissions);
-
-        return ResponseCode.SUCCESS.build(response);
-    }
-
-    @PostMapping("updateRolePermission")
-    public Response updateRolePermission(@RequestBody UpdateRolePermissionRequest updateRolePermissionRequest) {
-
-        if (updateRolePermissionRequest.getType() == 0) {
-            authorityService.deleteRolePermissionRelationBy(updateRolePermissionRequest.getRoleId(), updateRolePermissionRequest.getPermissionId());
-        } else {
-            RolePermissionRelation rolePermissionRelation = new RolePermissionRelation();
-            rolePermissionRelation.setRoleId(updateRolePermissionRequest.getRoleId());
-            rolePermissionRelation.setPermissionId(updateRolePermissionRequest.getPermissionId());
-            rolePermissionRelation.setStatus(1);
-            authorityService.insertOneRolePermissionRelation(rolePermissionRelation);
-        }
-
-        return ResponseCode.SUCCESS.build();
     }
 
     @PostMapping("updateUserRole")
@@ -123,5 +93,52 @@ public class AuthorityController {
 
         return ResponseCode.SUCCESS.build();
     }
+
+    /******************************************************************************************
+     *                                  后端权限相关api接口
+     * ****************************************************************************************
+     */
+    @GetMapping("getBackendPermissions")
+    public Response getPermissions() {
+
+        List<BackendPermission> backendPermissions = authorityService.selectAllPermissions();
+
+        GetPermissionsResponse response = GetPermissionsResponse.build(backendPermissions);
+
+        return ResponseCode.SUCCESS.build(response);
+    }
+
+    @GetMapping("getBackendPermissionsByRoleId")
+    public Response getPermissionsByRole(@Param("roleId") String roleId) {
+
+        List<BackendPermission> backendPermissions = authorityService.selectPermissionsByRoleIds(new HashSet() {{
+            add(roleId);
+        }});
+
+        GetPermissionsResponse response = GetPermissionsResponse.build(backendPermissions);
+
+        return ResponseCode.SUCCESS.build(response);
+    }
+
+    @PostMapping("updateRoleBackendPermission")
+    public Response updateRolePermission(@RequestBody UpdateRolePermissionRequest updateRolePermissionRequest) {
+
+        if (updateRolePermissionRequest.getType() == 0) {
+            authorityService.deleteRolePermissionRelationBy(updateRolePermissionRequest.getRoleId(), updateRolePermissionRequest.getPermissionId());
+        } else {
+            RolePermissionRelation rolePermissionRelation = new RolePermissionRelation();
+            rolePermissionRelation.setRoleId(updateRolePermissionRequest.getRoleId());
+            rolePermissionRelation.setPermissionId(updateRolePermissionRequest.getPermissionId());
+            rolePermissionRelation.setStatus(1);
+            authorityService.insertOneRolePermissionRelation(rolePermissionRelation);
+        }
+
+        return ResponseCode.SUCCESS.build();
+    }
+
+    /******************************************************************************************
+     *                                  前端权限相关api接口
+     * ****************************************************************************************
+     */
 
 }

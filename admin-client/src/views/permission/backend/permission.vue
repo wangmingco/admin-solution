@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import {getPermissions } from '@/api/authority'
+import {getBackendPermissions } from '@/api/authority'
 
 export default {
   data() {
@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     initPermissions() {
-      getPermissions().then(response => {
+      getBackendPermissions().then(response => {
         this.permissions = response.data.permissions.dataList
       })
     },
