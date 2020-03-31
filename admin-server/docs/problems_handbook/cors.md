@@ -66,4 +66,8 @@ if (process.env.NODE_ENV === 'development') {
      responseHeaders='',
      responseBody='{"code":1002,"message":"登录验证失败"}',}
 ```
-从日志中看到是请求中没有代码 cookie header.
+从日志中看到是针对跨域POST请求发起的预检请求OPTIONS中没有 cookie header.
+
+目前推测应该是预检请求中不带有cookie相关信息. 解决办法 TODO
+1. OPTIONS预检请求带上 cookie信息
+2. 后端将OPTIONS 预检请求放过检查

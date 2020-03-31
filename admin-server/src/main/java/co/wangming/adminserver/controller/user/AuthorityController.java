@@ -9,6 +9,7 @@ import co.wangming.adminserver.service.RoleService;
 import co.wangming.adminserver.service.UserService;
 import co.wangming.adminserver.vo.Response;
 import co.wangming.adminserver.vo.auth.*;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
@@ -164,6 +165,9 @@ public class AuthorityController {
         }
 
         Set<Long> roleIds = roles.stream().map(it -> it.getId()).collect(Collectors.toSet());
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return ResponseCode.SUCCESS.build(getUserBackendPermissionsResponse);
+        }
 
         Map<String, GetUserBackendPermissionsResponse.RouteNode> routeNodeMap = new HashMap<>();
 

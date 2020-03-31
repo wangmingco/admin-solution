@@ -66,12 +66,18 @@ const actions = {
 
 function importComponent(routeNodes) {
 
+  if(!routeNodes) {
+    return
+  }
+  
   for(var rn of routeNodes) {
     if(rn.component == "Layout") {
       rn.component = Layout
     } else {
       let componentPath = rn.component
-      rn.component = () => import(`@/views/${componentPath}`)
+      if(componentPath) {
+        rn.component = () => import(`@/views/${componentPath}`)
+      }
     }
    
     if(rn.children && rn.children.length > 0) {
