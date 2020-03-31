@@ -3,16 +3,20 @@ package co.wangming.adminserver.controller.user;
 import co.wangming.adminserver.enums.ResponseCode;
 import co.wangming.adminserver.logger.LoggerFactory;
 import co.wangming.adminserver.model.auth.*;
-import co.wangming.adminserver.service.AuthorityService;
+import co.wangming.adminserver.service.BackendPermissionService;
+import co.wangming.adminserver.service.FrontendPermissionService;
+import co.wangming.adminserver.service.RoleService;
+import co.wangming.adminserver.service.UserService;
 import co.wangming.adminserver.vo.Response;
 import co.wangming.adminserver.vo.auth.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created By WangMing On 2020-03-14
@@ -24,7 +28,16 @@ public class AuthorityController {
     private static final Logger LOGGER = LoggerFactory.getUserLogger(AuthorityController.class);
 
     @Resource
-    private AuthorityService authorityService;
+    private UserService userService;
+
+    @Resource
+    private RoleService roleService;
+
+    @Resource
+    private BackendPermissionService backendPermissionService;
+
+    @Resource
+    private FrontendPermissionService frontendPermissionService;
 
     /******************************************************************************************
      *                                  用户相关api接口
@@ -40,7 +53,7 @@ public class AuthorityController {
     @GetMapping("getUsers")
     public Response getUsers() {
 
-        List<User> allUsers = authorityService.selectAllUsers();
+        List<User> allUsers = userService.selectAllUsers();
 
         GetUsersResponse response = GetUsersResponse.build(allUsers);
 
@@ -61,7 +74,7 @@ public class AuthorityController {
     @GetMapping("getRoles")
     public Response getRoles() {
 
-        List<Role> allRoles = authorityService.selectAllRoles();
+        List<Role> allRoles = roleService.selectAllRoles();
 
         GetRolesResponse response = GetRolesResponse.build(allRoles);
 
@@ -69,9 +82,10 @@ public class AuthorityController {
     }
 
     @GetMapping("getRolesByUserId")
-    public Response getRolesByUserId(@Param("userId") long userId) {
+    public Response getRolesByUserId() {
+        long userId = userService.getUserId();
 
-        List<Role> roles = authorityService.selectRolesByUserId(userId);
+        List<Role> roles = roleService.selectRolesByUserId(userId);
 
         GetRolesResponse response = GetRolesResponse.build(roles);
 
@@ -82,13 +96,13 @@ public class AuthorityController {
     public Response updateUserRole(@RequestBody UpdateUserRoleRequest updateUserRoleRequest) {
 
         if (updateUserRoleRequest.getType() == 0) {
-            authorityService.deleteUserRoleRelationBy(updateUserRoleRequest.getRoleId(), updateUserRoleRequest.getUserId());
+            roleService.deleteUserRoleRelationBy(updateUserRoleRequest.getRoleId(), updateUserRoleRequest.getUserId());
         } else {
             UserRoleRelation userRoleRelation = new UserRoleRelation();
             userRoleRelation.setRoleId(updateUserRoleRequest.getRoleId());
             userRoleRelation.setUserId(updateUserRoleRequest.getUserId());
             userRoleRelation.setStatus(1);
-            authorityService.insertOneUserRoleRelation(userRoleRelation);
+            roleService.insertOneUserRoleRelation(userRoleRelation);
         }
 
         return ResponseCode.SUCCESS.build();
@@ -101,7 +115,7 @@ public class AuthorityController {
     @GetMapping("getBackendPermissions")
     public Response getPermissions() {
 
-        List<BackendPermission> backendPermissions = authorityService.selectAllPermissions();
+        List<BackendPermission> backendPermissions = backendPermissionService.selectAllPermissions();
 
         GetPermissionsResponse response = GetPermissionsResponse.build(backendPermissions);
 
@@ -110,8 +124,7 @@ public class AuthorityController {
 
     @GetMapping("getBackendPermissionsByRoleId")
     public Response getPermissionsByRole(@Param("roleId") String roleId) {
-
-        List<BackendPermission> backendPermissions = authorityService.selectPermissionsByRoleIds(new HashSet() {{
+        List<BackendPermission> backendPermissions = backendPermissionService.selectPermissionsByRoleIds(new HashSet() {{
             add(roleId);
         }});
 
@@ -124,13 +137,13 @@ public class AuthorityController {
     public Response updateRolePermission(@RequestBody UpdateRolePermissionRequest updateRolePermissionRequest) {
 
         if (updateRolePermissionRequest.getType() == 0) {
-            authorityService.deleteRolePermissionRelationBy(updateRolePermissionRequest.getRoleId(), updateRolePermissionRequest.getPermissionId());
+            backendPermissionService.deleteRolePermissionRelationBy(updateRolePermissionRequest.getRoleId(), updateRolePermissionRequest.getPermissionId());
         } else {
             RolePermissionRelation rolePermissionRelation = new RolePermissionRelation();
             rolePermissionRelation.setRoleId(updateRolePermissionRequest.getRoleId());
             rolePermissionRelation.setPermissionId(updateRolePermissionRequest.getPermissionId());
             rolePermissionRelation.setStatus(1);
-            authorityService.insertOneRolePermissionRelation(rolePermissionRelation);
+            backendPermissionService.insertOneRolePermissionRelation(rolePermissionRelation);
         }
 
         return ResponseCode.SUCCESS.build();
@@ -140,5 +153,62 @@ public class AuthorityController {
      *                                  前端权限相关api接口
      * ****************************************************************************************
      */
+    @GetMapping("getUserFrontendPermissions")
+    public Response getUserFrontendPermissions() {
+        long userId = userService.getUserId();
+        List<Role> roles = roleService.selectRolesByUserId(userId);
+        GetUserBackendPermissionsResponse getUserBackendPermissionsResponse = new GetUserBackendPermissionsResponse();
+
+        if (roles == null) {
+            return ResponseCode.SUCCESS.build(getUserBackendPermissionsResponse);
+        }
+
+        Set<Long> roleIds = roles.stream().map(it -> it.getId()).collect(Collectors.toSet());
+
+        Map<String, GetUserBackendPermissionsResponse.RouteNode> routeNodeMap = new HashMap<>();
+
+        List<FrontendPermission> frontendPermissions = frontendPermissionService.selectPermissionsByRoleIds(roleIds);
+
+        // 根据角色id找到所有前端权限, 然后遍历构建前端路由树
+        for (FrontendPermission frontendPermission : frontendPermissions) {
+
+            if (StringUtils.isEmpty(frontendPermission.getParrent())) {
+                // 如果父为空, 则直接构建一个路由节点
+                GetUserBackendPermissionsResponse.RouteNode routeNode = routeNodeMap.get(frontendPermission.getPath());
+                if (routeNode == null) {
+                    routeNode = new GetUserBackendPermissionsResponse.RouteNode();
+                    routeNodeMap.put(frontendPermission.getPath(), routeNode);
+                }
+
+                routeNode.setComponent(frontendPermission.getComponent());
+                routeNode.setName(frontendPermission.getName());
+                routeNode.setPath(frontendPermission.getPath());
+                routeNode.setRedirect(frontendPermission.getRedirect());
+                routeNode.setMeta(frontendPermission.getIcon(), frontendPermission.getTitle());
+
+            } else {
+                GetUserBackendPermissionsResponse.RouteNode parentRouteNode = routeNodeMap.get(frontendPermission.getParrent());
+
+                if (parentRouteNode == null) {
+                    parentRouteNode = new GetUserBackendPermissionsResponse.RouteNode();
+                    routeNodeMap.put(frontendPermission.getParrent(), parentRouteNode);
+                }
+
+                GetUserBackendPermissionsResponse.RouteNode routeNode = new GetUserBackendPermissionsResponse.RouteNode();
+                routeNode.setComponent(frontendPermission.getComponent());
+                routeNode.setName(frontendPermission.getName());
+                routeNode.setPath(frontendPermission.getPath());
+                routeNode.setRedirect(frontendPermission.getRedirect());
+                routeNode.setMeta(frontendPermission.getIcon(), frontendPermission.getTitle());
+
+                parentRouteNode.getChildren().add(routeNode);
+            }
+        }
+
+        getUserBackendPermissionsResponse.setRouteNodes(routeNodeMap.values());
+
+        return ResponseCode.SUCCESS.build(getUserBackendPermissionsResponse);
+    }
+
 
 }

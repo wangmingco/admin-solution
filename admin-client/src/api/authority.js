@@ -54,3 +54,10 @@ export function updateRoleBackendPermission(params) {
   })
 }
 
+export function getUserFrontendPermissions(params) {
+  return request({
+    url: '/api/user/authority/getUserFrontendPermissions',
+    method: 'get',
+    params
+  })
+}

@@ -27,7 +27,7 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       // determine whether the user has obtained his permission roles through getInfo
-      const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      const hasRoles = store.getters.permission_routes && store.getters.permission_routes.length > 0
       if (hasRoles) {
         next()
       } else {

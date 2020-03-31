@@ -1,4 +1,6 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import { getUserFrontendPermissions } from '@/api/authority'
+import Layout from '@/layout'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -49,15 +51,32 @@ const mutations = {
 const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
-      let accessedRoutes
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      }
-      commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
+      getUserFrontendPermissions().then(response => {
+        
+        let routeNodes = response.data.routeNodes
+        importComponent(routeNodes)
+        
+        commit('SET_ROUTES', routeNodes)
+        resolve(routeNodes)
+      })
+      
     })
+  }
+}
+
+function importComponent(routeNodes) {
+
+  for(var rn of routeNodes) {
+    if(rn.component == "Layout") {
+      rn.component = Layout
+    } else {
+      let componentPath = rn.component
+      rn.component = () => import(`@/views/${componentPath}`)
+    }
+   
+    if(rn.children && rn.children.length > 0) {
+      importComponent(rn.children)
+    }
   }
 }
 

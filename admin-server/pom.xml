@@ -26,7 +26,9 @@
 		<jmockit.version>1.49</jmockit.version>
 		<junit.version>4.13</junit.version>
 		<apache.collections4.version>4.4</apache.collections4.version>
+		<apache.commons.lang3.version>3.10</apache.commons.lang3.version>
 		<apache.io.version>2.6</apache.io.version>
+
 	</properties>
 
 	<dependencies>
@@ -81,6 +83,12 @@
 			<version>${apache.io.version}</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${apache.commons.lang3.version}</version>
+		</dependency>
 
 		<!-- 测试mock框架 -->
 		<dependency>

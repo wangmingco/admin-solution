@@ -8,8 +8,13 @@ import co.wangming.adminserver.model.BaseModel;
 public class FrontendPermission extends BaseModel {
 
     private long id;
-    private String permissionName;
+    private String name;
     private String path;
+    private String component;
+    private String redirect;
+    private String title;
+    private String icon;
+    private String parrent;
 
     public long getId() {
         return id;
@@ -19,12 +24,12 @@ public class FrontendPermission extends BaseModel {
         this.id = id;
     }
 
-    public String getPermissionName() {
-        return permissionName;
+    public String getName() {
+        return name;
     }
 
-    public void setPermissionName(String permissionName) {
-        this.permissionName = permissionName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPath() {
@@ -33,5 +38,45 @@ public class FrontendPermission extends BaseModel {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getComponent() {
+        return component;
+    }
+
+    public void setComponent(String component) {
+        this.component = component;
+    }
+
+    public String getRedirect() {
+        return redirect;
+    }
+
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getParrent() {
+        return parrent;
+    }
+
+    public void setParrent(String parrent) {
+        this.parrent = parrent;
     }
 }
