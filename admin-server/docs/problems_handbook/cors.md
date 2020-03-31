@@ -71,3 +71,5 @@ if (process.env.NODE_ENV === 'development') {
 目前推测应该是预检请求中不带有cookie相关信息. 解决办法 TODO
 1. OPTIONS预检请求带上 cookie信息
 2. 后端将OPTIONS 预检请求放过检查
+
+目前是在ApiAccessControlFilter 这个类里打了一个补丁, 但是得用一种更加优雅的方案实现

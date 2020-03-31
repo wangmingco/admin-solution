@@ -26,7 +26,15 @@ public class SpringUtil implements ApplicationContextAware {
         return context.getBean(requiredType);
     }
 
+    public static boolean isInProduction() {
+        return checkInProduction(context);
+    }
+
     public static boolean isInProduction(ApplicationContext applicationContext) {
+        return checkInProduction(applicationContext);
+    }
+
+    private static boolean checkInProduction(ApplicationContext applicationContext) {
         String[] activeProfiles = applicationContext.getEnvironment().getActiveProfiles();
         if (activeProfiles == null || activeProfiles.length == 0 || activeProfiles.length > 1) {
             return true;

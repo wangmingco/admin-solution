@@ -3,6 +3,7 @@ package co.wangming.adminserver.shiro;
 import co.wangming.adminserver.enums.ResponseCode;
 import co.wangming.adminserver.logger.LoggerFactory;
 import co.wangming.adminserver.logger.LoggerLocalCache;
+import co.wangming.adminserver.util.SpringUtil;
 import co.wangming.adminserver.util.UserUtil;
 import co.wangming.adminserver.vo.Response;
 import com.alibaba.fastjson.JSON;
@@ -24,6 +25,14 @@ public class ApiAccessControlFilter extends AccessControlFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
+
+        // 开发环境中, 如果是OPTIONS预检请求则直接返回true TODO 这里想办法做的更加优雅些, 目前就是个补丁
+        if (!SpringUtil.isInProduction()
+                && request instanceof HttpServletRequest
+                && "OPTIONS".equals(((HttpServletRequest) request).getMethod())) {
+            return true;
+        }
+
         trySetUserLog();
 
         LOGGER.info("开始进行鉴权");

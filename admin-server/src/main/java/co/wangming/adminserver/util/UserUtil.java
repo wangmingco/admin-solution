@@ -21,7 +21,7 @@ public class UserUtil {
         try {
             Session session = subject.getSession(false);
             if (session == null) {
-                LOGGER.error("获取UserName失败, 没找到session");
+                LOGGER.debug("获取UserName失败, 没找到session");
                 return "";
             }
             Object user = session.getAttribute(PRINCIPALS_SESSION_KEY);
