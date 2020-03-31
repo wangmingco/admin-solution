@@ -1,5 +1,6 @@
 HELP.md
 target/
+bash/admin-solution
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
