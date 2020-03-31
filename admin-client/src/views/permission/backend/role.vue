@@ -99,7 +99,7 @@ export default {
           roleId: this.selectedRole.id
       }
       updateRoleBackendPermission(params).then(response => {
-        console.log("updateRolePermission", response)
+        // console.log("updateRolePermission", response)
       })
     }
   }

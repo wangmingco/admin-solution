@@ -93,14 +93,13 @@ export default {
 
     },
     handleCheckedPermissionChange(item, value) {
-      console.log("handleCheckedPermissionChange", value, this.selectedRole)
       let params = {
           type: item == true ? 1 : 0,
           permissionId: value,
           roleId: this.selectedRole.id
       }
       updateRoleFrontendPermission(params).then(response => {
-        console.log("updateRolePermission", response)
+        // console.log("updateRolePermission", response)
       })
     }
   }
