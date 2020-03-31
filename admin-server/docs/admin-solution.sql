@@ -1,3 +1,8 @@
+CREATE DATABASE `admin-solution` DEFAULT CHARACTER SET = `utf8mb4`;
+
+USE `admin-solution`;
+SET session sql_mode = 'STRICT_TRANS_TABLES';
+
 -- 用户表
 DROP TABLE IF EXISTS `User`;
 CREATE TABLE `User`
@@ -54,7 +59,7 @@ CREATE TABLE `UserRoleRelation`
 
 -- 权限表
 DROP TABLE IF EXISTS `BackendPermission`;
-CREATE TABLE `Permission`
+CREATE TABLE `BackendPermission`
 (
     `id`             bigint(20)  NOT NULL AUTO_INCREMENT COMMENT '主键',
     `permissionName` varchar(64) NOT NULL COMMENT '权限名',
