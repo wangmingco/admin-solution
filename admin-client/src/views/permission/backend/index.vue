@@ -25,7 +25,7 @@ import role from './role'
 import permission from './permission'
 
 export default {
-   components: { user, role, permission},
+  components: { user, role, permission},
   data() {
     return {
       activeName: 'user'

@@ -61,3 +61,26 @@ export function getUserFrontendPermissions(params) {
     params
   })
 }
+
+export function getFrontendPermissions() {
+  return request({
+    url: '/api/user/authority/getFrontendPermissions',
+    method: 'get'
+  })
+}
+
+export function getFrontendPermissionsByRoleId(params) {
+  return request({
+    url: '/api/user/authority/getFrontendPermissionsByRoleId',
+    method: 'get',
+    params
+  })
+}
+
+export function updateRoleFrontendPermission(params) {
+  return request({
+    url: '/api/user/authority/updateRoleFrontendPermission',
+    method: 'post',
+    data: params
+  })
+}

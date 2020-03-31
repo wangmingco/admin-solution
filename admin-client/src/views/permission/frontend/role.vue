@@ -30,12 +30,12 @@
          
          <div v-for="permission in permissions">
            <el-checkbox  
-            :label="permission.permissionName" 
+            :label="permission.name" 
             :key="permission.id" 
             size="medium"
             @change="checked=> handleCheckedPermissionChange(checked,permission.id)"
             >
-              {{permission.permissionName}}
+              {{permission.name}}
           </el-checkbox>
          </div>
           
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { getRoles, getBackendPermissions, getBackendPermissionsByRoleId, updateRoleBackendPermission } from '@/api/authority'
+import { getRoles, getFrontendPermissions, getFrontendPermissionsByRoleId, updateRoleFrontendPermission } from '@/api/authority'
 
 export default {
    data() {
@@ -72,7 +72,7 @@ export default {
       })
     },
     initPermissions() {
-      getBackendPermissions().then(response => {
+      getFrontendPermissions().then(response => {
         this.permissions = response.data.permissions.dataList
       })
     },
@@ -85,20 +85,21 @@ export default {
       var params = {
         roleId: row.id
       }
-      getBackendPermissionsByRoleId(params).then(response => {
-        this.checkedPermissions = response.data.permissions.dataList.map(item => item.permissionName)
+      getFrontendPermissionsByRoleId(params).then(response => {
+        this.checkedPermissions = response.data.permissions.dataList.map(item => item.name)
       })
     },
     handleDelete(index, row) {
 
     },
     handleCheckedPermissionChange(item, value) {
+      console.log("handleCheckedPermissionChange", value, this.selectedRole)
       let params = {
           type: item == true ? 1 : 0,
           permissionId: value,
           roleId: this.selectedRole.id
       }
-      updateRoleBackendPermission(params).then(response => {
+      updateRoleFrontendPermission(params).then(response => {
         console.log("updateRolePermission", response)
       })
     }

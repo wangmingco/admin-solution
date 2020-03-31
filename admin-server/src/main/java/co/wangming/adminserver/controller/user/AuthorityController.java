@@ -210,5 +210,41 @@ public class AuthorityController {
         return ResponseCode.SUCCESS.build(getUserBackendPermissionsResponse);
     }
 
+    @GetMapping("getFrontendPermissions")
+    public Response getFrontendPermissions() {
+
+        List<FrontendPermission> frontendPermissions = frontendPermissionService.selectAllPermissions();
+
+        GetPermissionsResponse response = GetPermissionsResponse.buildFrontend(frontendPermissions);
+
+        return ResponseCode.SUCCESS.build(response);
+    }
+
+    @GetMapping("getFrontendPermissionsByRoleId")
+    public Response getFrontendPermissionsByRoleId(@Param("roleId") String roleId) {
+        List<FrontendPermission> frontendPermissions = frontendPermissionService.selectPermissionsByRoleIds(new HashSet() {{
+            add(roleId);
+        }});
+
+        GetPermissionsResponse response = GetPermissionsResponse.buildFrontend(frontendPermissions);
+
+        return ResponseCode.SUCCESS.build(response);
+    }
+
+    @PostMapping("updateRoleFrontendPermission")
+    public Response updateRoleFrontendPermission(@RequestBody UpdateRolePermissionRequest updateRolePermissionRequest) {
+
+        if (updateRolePermissionRequest.getType() == 0) {
+            frontendPermissionService.deleteRolePermissionRelationBy(updateRolePermissionRequest.getRoleId(), updateRolePermissionRequest.getPermissionId());
+        } else {
+            RolePermissionRelation rolePermissionRelation = new RolePermissionRelation();
+            rolePermissionRelation.setRoleId(updateRolePermissionRequest.getRoleId());
+            rolePermissionRelation.setPermissionId(updateRolePermissionRequest.getPermissionId());
+            rolePermissionRelation.setStatus(1);
+            frontendPermissionService.insertOneRolePermissionRelation(rolePermissionRelation);
+        }
+
+        return ResponseCode.SUCCESS.build();
+    }
 
 }
