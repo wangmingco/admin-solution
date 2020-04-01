@@ -26,10 +26,9 @@ export default {
       activeName: 'role'
     }
   },
-  watch: {
-  },
-
-  methods: {
+  created() {
+    this.$store.dispatch('getRolesAction')
+    this.$store.dispatch('getFrontendPermissionsAction')
   }
 }
 </script>

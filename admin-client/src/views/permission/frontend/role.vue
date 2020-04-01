@@ -46,36 +46,25 @@
 </template>
 
 <script>
-import { getRoles, getFrontendPermissions, getFrontendPermissionsByRoleId, updateRoleFrontendPermission } from '@/api/authority'
+import { getFrontendPermissionsByRoleId, updateRoleFrontendPermission } from '@/api/authority'
 
 export default {
    data() {
     return {
       permissionDialogVisible: false,
-      roles: [],
-      permissions: [],
       checkedPermissions: [],
       selectedRole: null
     }
   },
   computed: {
-  },
-  created() {
-    // this.$store.dispatch('getPermissionsAction')
-    this.initRoles()
-    this.initPermissions()
+    roles() {
+      return this.$store.getters.roles
+    },
+    permissions() {
+      return this.$store.getters.frontendPermissions
+    }
   },
   methods: {
-    initRoles() {
-      getRoles().then(response => {
-        this.roles = response.data.roles.dataList
-      })
-    },
-    initPermissions() {
-      getFrontendPermissions().then(response => {
-        this.permissions = response.data.permissions.dataList
-      })
-    },
     handleEdit(index, row) {
 
     },

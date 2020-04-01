@@ -31,10 +31,10 @@ export default {
       activeName: 'user'
     }
   },
-  watch: {
-  },
-
-  methods: {
+  created() {
+    this.$store.dispatch('getUsersAction')
+    this.$store.dispatch('getRolesAction')
+    this.$store.dispatch('getBackendPermissionsAction')
   }
 }
 </script>

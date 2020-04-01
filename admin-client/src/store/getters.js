@@ -7,6 +7,7 @@ const getters = {
   name: state => state.user.name,
   users: state => state.authority.users,
   roles: state => state.authority.roles,
-  permissions: state => state.authority.permissions
+  backendPermissions: state => state.authority.backendPermissions,
+  frontendPermissions: state => state.authority.frontendPermissions
 }
 export default getters

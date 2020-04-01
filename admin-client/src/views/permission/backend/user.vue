@@ -38,36 +38,25 @@
 </template>
 
 <script>
-import { getUsers, getRoles, getRolesByUserId, updateUserRole } from '@/api/authority'
+import { getRolesByUserId, updateUserRole } from '@/api/authority'
 
 export default {
    data() {
     return {
       rolesDialogVisible: false,
-      users: null,
-      roles: null,
       checkedRoles: [],
       selectedUser: null
     }
   },
   computed: {
-  },
-  created() {
-    // this.$store.dispatch('getPermissionsAction')
-    this.initUsers()
-    this.initRoles()
+    users() {
+      return this.$store.getters.users
+    },
+    roles() {
+      return this.$store.getters.roles
+    }
   },
   methods: {
-    initUsers() {
-      getUsers().then(response => {
-        this.users = response.data.users.dataList
-      })
-    },
-    initRoles() {
-      getRoles().then(response => {
-        this.roles = response.data.roles.dataList
-      })
-    },
     handleEdit(index, row) {
       this.selectedUser = row
     },

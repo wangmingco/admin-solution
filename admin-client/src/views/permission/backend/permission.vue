@@ -38,35 +38,18 @@
 </template>
 
 <script>
-import {getBackendPermissions } from '@/api/authority'
 
 export default {
   data() {
     return {
-      permissions: []
     }
   },
   computed: {
-    // permissions() {
-    //   var permissions = this.$store.getters.permissions
-    //   if(permissions) {
-    //     console.log("set permissions", permissions)
-    //     return permissions.dataList
-    //   } else {
-    //     return []
-    //   }
-    // }
-  },
-  created() {
-    // this.$store.dispatch('getPermissionsAction')
-    this.initPermissions()
+    permissions() {
+      return this.$store.getters.backendPermissions
+    }
   },
   methods: {
-    initPermissions() {
-      getBackendPermissions().then(response => {
-        this.permissions = response.data.permissions.dataList
-      })
-    },
     handleEdit(index, row) {
 
     },
