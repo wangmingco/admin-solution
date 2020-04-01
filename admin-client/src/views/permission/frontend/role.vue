@@ -3,7 +3,8 @@
     <el-table
       :data="roles"
       style="width: 100%"
-      max-height="1250">
+      max-height="1250"
+      border>
       <el-table-column
         fixed
         prop="id"
