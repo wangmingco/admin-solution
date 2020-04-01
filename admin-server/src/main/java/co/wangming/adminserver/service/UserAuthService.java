@@ -30,7 +30,7 @@ public class UserAuthService {
     public Response login(LoginRequest loginRequest) {
 
         String username = loginRequest.getUsername();
-        String password = loginRequest.getPassword();
+        String password = MessageDigestUtil.hmacSha512Digest(loginRequest.getPassword());
 
         Subject subject = SecurityUtils.getSubject();
 

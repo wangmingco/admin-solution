@@ -50,6 +50,7 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import { removeToken } from '@/utils/auth'
+import { sha256 } from 'js-sha256'
 
 export default {
   name: 'Login',
@@ -105,7 +106,11 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
+          let params = {
+            username: this.loginForm.username,
+            password: sha256(this.loginForm.password)
+          }
+          this.$store.dispatch('user/login', params).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {

@@ -1,5 +1,8 @@
 package co.wangming.adminserver.util;
 
+import org.apache.commons.codec.digest.HmacAlgorithms;
+import org.apache.commons.codec.digest.HmacUtils;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 
@@ -7,6 +10,8 @@ import java.security.MessageDigest;
  * Created By WangMing On 2020-03-03
  **/
 public class MessageDigestUtil {
+
+    private static final byte[] HMAC_KEY = "1585727195822".getBytes();
 
     public static String md5(String content) throws Exception {
         try {
@@ -22,4 +27,8 @@ public class MessageDigestUtil {
         }
     }
 
+    public static String hmacSha512Digest(String content) {
+        HmacUtils hmac = new HmacUtils(HmacAlgorithms.HMAC_SHA_512, HMAC_KEY);
+        return hmac.hmacHex(content);
+    }
 }
