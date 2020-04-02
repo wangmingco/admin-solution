@@ -258,3 +258,76 @@ public class ShiroConfig {
 * `RoleBackendPermissionRelation` 表存储角色拥有的后端权限
 * `FrontendPermission` 表存储前端路由信息.
 * `RoleFrontendPermissionRelation` 表存储角色拥有的前端路由信息
+
+### 访问日志输出
+为了在开发过程中能够比较方便的排查问题, 因此将每次请求报文与应答报文都进行了打印(生产环境可以选择关闭)
+
+```java
+public class HttpTraceLogFilter extends OncePerRequestFilter implements Ordered {
+
+    private static final Logger LOGGER = LoggerFactory.getUserLogger(HttpTraceLogFilter.class);
+
+    private static final String NEED_TRACE_PATH_PREFIX = "/api/";
+    private static final String IGNORE_CONTENT_TYPE = "multipart/form-data";
+
+
+    public HttpTraceLogFilter() {
+    }
+
+    @Override
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE - 10;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        String requestUri = request.getRequestURI();
+        LoggerLocalCache.INSTANCE.setPath(requestUri);
+
+        if (!isRequestValid(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        /**
+         * 将Request和response的请求/应答字节进行拷贝
+         */
+        if (!(request instanceof ContentCachingRequestWrapper)) {
+            request = new ContentCachingRequestWrapper(request);
+        }
+
+        if (!(response instanceof ContentCachingResponseWrapper)) {
+            response = new ContentCachingResponseWrapper(response);
+        }
+
+        int status = HttpStatus.INTERNAL_SERVER_ERROR.value();
+
+        long startTime = System.currentTimeMillis();
+        try {
+            filterChain.doFilter(request, response);
+            status = response.getStatus();
+        } finally {
+            String path = request.getRequestURI();
+            if (path.startsWith(NEED_TRACE_PATH_PREFIX) && !Objects.equals(IGNORE_CONTENT_TYPE, request.getContentType())) {
+
+                HttpTraceLog traceLog = new HttpTraceLog();
+                traceLog.setPath(path);
+                traceLog.setMethod(request.getMethod());
+                traceLog.setTimeTaken(System.currentTimeMillis() - startTime);
+                traceLog.setTime(LocalDateTime.now().toString());
+                traceLog.setParameterMap(JSON.toJSONString(request.getParameterMap()));
+                traceLog.setStatus(status);
+
+                setRequestHeaderAndBody(request, traceLog);
+                setResponseHeaderAndBody(response, traceLog);
+
+                LOGGER.info("Http 请求日志: {}", traceLog);
+            }
+            updateResponse(response);
+        }
+    }
+    
+    // ... 其他方法参阅具体实现
+}
+```
