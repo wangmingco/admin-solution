@@ -37,32 +37,6 @@ export const constantRoutes = [
   }
 ]
 
-export const asyncRoutes = [
-  {
-    path: '/permission',
-    component: Layout,
-    redirect: '/permission/frontend',
-    name: '权限配置',
-    meta: { title: '权限配置', icon: 'example' },
-    children: [
-      {
-        path: 'frontend',
-        name: '前端权限',
-        component: () => import('@/views/permission/frontend/index'),
-        meta: { title: '前端权限', icon: 'table' }
-      },
-      {
-        path: 'backend',
-        name: '后端权限',
-        component: () => import('@/views/permission/backend/index'),
-        meta: { title: '后端权限', icon: 'tree' }
-      }
-    ]
-  },
-
-  { path: '*', redirect: '/404', hidden: true }
-]
-
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),

@@ -12,6 +12,9 @@ const getDefaultState = () => {
   const state = getDefaultState()
 
   const mutations = {
+      RESET_STATE: (state) => {
+        Object.assign(state, getDefaultState())
+      },
       SET_UERS: (state, users) => {
         state.users = users
       },
@@ -80,6 +83,13 @@ const getDefaultState = () => {
                 })
             })
         }
+    },
+
+    resetState({ commit }) {
+        return new Promise(resolve => {
+            commit('RESET_STATE')
+            resolve()
+        })
     }
   }
 

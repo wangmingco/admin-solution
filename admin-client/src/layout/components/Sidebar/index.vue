@@ -13,7 +13,7 @@
         mode="vertical"
       >
         <!-- <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" /> -->
-        <sidebar-item v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path" />
+        <sidebar-item v-for="route in permissionRoutes" :key="route.path" :item="route" :base-path="route.path" />
     
       </el-menu>
     </el-scrollbar>
@@ -30,7 +30,7 @@ export default {
   components: { SidebarItem, Logo },
   computed: {
     ...mapGetters([
-      'permission_routes',
+      'permissionRoutes',
       'sidebar'
     ]),
     routes() {

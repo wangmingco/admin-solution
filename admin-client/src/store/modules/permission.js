@@ -1,4 +1,4 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import {constantRoutes } from '@/router'
 import { getUserFrontendPermissions } from '@/api/authority'
 import Layout from '@/layout'
 
@@ -36,12 +36,22 @@ export function filterAsyncRoutes(routes, roles) {
   return res
 }
 
+const getDefaultState = () => {
+  return {
+    routes: [],
+    addRoutes: []
+  }
+}
+
 const state = {
   routes: [],
   addRoutes: []
 }
 
 const mutations = {
+  RESET_STATE: (state) => {
+    Object.assign(state, getDefaultState())
+  },
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
     state.routes = constantRoutes.concat(routes)
@@ -56,10 +66,17 @@ const actions = {
         let routeNodes = response.data.routeNodes
         importComponent(routeNodes)
         
+        routeNodes.push({ path: '*', redirect: '/404', hidden: true })
         commit('SET_ROUTES', routeNodes)
         resolve(routeNodes)
       })
       
+    })
+  },
+  resetState({ commit }) {
+    return new Promise(resolve => {
+        commit('RESET_STATE')
+        resolve()
     })
   }
 }
