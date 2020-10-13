@@ -23,7 +23,7 @@
 		<mybatis.spring.boot.version>2.1.1</mybatis.spring.boot.version>
 		<fastjson.version>1.2.62</fastjson.version>
 		<jmockit.version>1.49</jmockit.version>
-		<junit.version>4.13</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<apache.commons.collections4.version>4.4</apache.commons.collections4.version>
 		<apache.commons.lang3.version>3.10</apache.commons.lang3.version>
 		<apache.commons.codec.version>1.14</apache.commons.codec.version>
