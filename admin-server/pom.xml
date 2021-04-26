@@ -27,7 +27,7 @@
 		<apache.commons.collections4.version>4.4</apache.commons.collections4.version>
 		<apache.commons.lang3.version>3.10</apache.commons.lang3.version>
 		<apache.commons.codec.version>1.14</apache.commons.codec.version>
-		<apache.commons.io.version>2.6</apache.commons.io.version>
+		<apache.commons.io.version>2.7</apache.commons.io.version>
 
 	</properties>
 
