@@ -21,7 +21,7 @@
 		<shiro.version>1.5.1</shiro.version>
 		<mysql.connector.version>8.0.19</mysql.connector.version>
 		<mybatis.spring.boot.version>2.1.1</mybatis.spring.boot.version>
-		<fastjson.version>1.2.62</fastjson.version>
+		<fastjson.version>1.2.83</fastjson.version>
 		<jmockit.version>1.49</jmockit.version>
 		<junit.version>4.13</junit.version>
 		<apache.commons.collections4.version>4.4</apache.commons.collections4.version>
