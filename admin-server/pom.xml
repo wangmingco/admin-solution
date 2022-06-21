@@ -19,7 +19,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<shiro.version>1.5.1</shiro.version>
-		<mysql.connector.version>8.0.19</mysql.connector.version>
+		<mysql.connector.version>8.0.28</mysql.connector.version>
 		<mybatis.spring.boot.version>2.1.1</mybatis.spring.boot.version>
 		<fastjson.version>1.2.62</fastjson.version>
 		<jmockit.version>1.49</jmockit.version>
